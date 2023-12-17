@@ -17,13 +17,13 @@ lines = data.splitlines()
 # Find all Dexed instances
 dexed_vst3i_line_numbers = [i for i, line in enumerate(lines) if line.lstrip().startswith('<VST "VST3i: Dexed')]
 
-# For each of those Dexed instances, get the intendantion level (number of spaces before the '<VST "VST3i: Dexed' string)
+# For each of those Dexed instances, get the intendation level (number of spaces before the '<VST "VST3i: Dexed' string)
 for begin_line_number in dexed_vst3i_line_numbers:
-    intendantion_level = len(lines[begin_line_number]) - len(lines[begin_line_number].lstrip())
-    print("Dexed instance begin line number: " + str(begin_line_number) + ", intendantion level: " + str(intendantion_level))
+    intendation_level = len(lines[begin_line_number]) - len(lines[begin_line_number].lstrip())
+    print("Dexed instance begin line number: " + str(begin_line_number) + ", intendation level: " + str(intendation_level))
     end_line_number = None
     for i in range(begin_line_number + 1, len(lines)):
-        if lines[i].startswith(' ' * intendantion_level + '>'):
+        if lines[i].startswith(' ' * intendation_level + '>'):
             end_line_number = i
     print("Dexed instance end line number: " + str(end_line_number))
     # Between the begin and end line numbers, there are 3 base64 encoded blobs. The fist and the last are one line each, the middle one is multiple lines.
@@ -79,7 +79,7 @@ for begin_line_number in dexed_vst3i_line_numbers:
     # Split into lines of 128 characters
     blob2_lines = [blob2[i:i+128] for i in range(0, len(blob2), 128)]
     # At the beginning of each line, add indentation_level + 2 spaces
-    blob2_lines = [' ' * (intendantion_level + 2) + line for line in blob2_lines]
+    blob2_lines = [' ' * (intendation_level + 2) + line for line in blob2_lines]
 
     # Replace the lines for blob 2 with the modified blob 2 lines
     lines[begin_line_number + 2:end_line_number-1] = blob2_lines
