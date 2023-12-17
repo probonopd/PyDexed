@@ -24,7 +24,7 @@ init_vced = [99, 99, 99, 99,                                                    
             99, 99, 99, 99, 99, 99, 99, 00, 39, 0, 0, 0, 0, 0, 0, 0, 99, 0, 1, 0, 7, # OP1
             99, 99, 99, 99,                                                          # PITCH EG RATE 1-4 (0 to 99)
             50, 50, 50, 50,                                                          # PITCH EG LEVEL 1-4 (0 to 99)
-            31,                                                                       # ALGORITHM SELECT (0 to 31)
+            0,                                                                       # ALGORITHM SELECT (0 to 31)
             0,                                                                       # FEEDBACK (0 to 7)
             1,                                                                       # OSCILLATOR KEY SYNC (0:OFF, 1:ON)
             35,                                                                      # LFO SPEED (0 to 99)
