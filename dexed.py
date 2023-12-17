@@ -81,11 +81,8 @@ def read_dexed_xml(data):
     # Use xmltodict to convert the XML to a dictionary
     dexed_state_dict = xmltodict.parse(ET.tostring(root, encoding='utf-8'))
 
-    # Get the encoded sysex from the dictionary
-    encoded_sysex = dexed_state_dict['dexedState']['dexedBlob']['@sysex']
-
     # Decode the sysex
-    decoded_sysex = codec.fromJuceBase64Encoding(encoded_sysex)
+    decoded_sysex = codec.fromJuceBase64Encoding(dexed_state_dict['dexedState']['dexedBlob']['@sysex'])
     
     # In the dictionary, replace the encoded sysex with the decoded sysex for better readability
     dexed_state_dict['dexedState']['dexedBlob']['@sysex'] = " ".join(decoded_sysex.hex().upper()[i:i+2] for i in range(0, len(decoded_sysex.hex()), 2))
@@ -121,6 +118,7 @@ def construct_dexed_xml(dexed_state_dict):
         ValueError: If the Dexed state dictionary is invalid or cannot be parsed.
 
     """
+
     # Get the encoded sysex from the dictionary
     decoded_sysex = dexed_state_dict['dexedState']['dexedBlob']['@sysex']
 
