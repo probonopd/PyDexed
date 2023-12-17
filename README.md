@@ -8,7 +8,7 @@ Python scripts to modify Reaper RPP files containing Dexed instances
 - [x] Decode `sysex` and `program` Dexed plugin state parameters (encoded using JUCE non-standard base64 encoding) to hex
 - [x] Encode hex to Dexed plugin state parameters (encoded using JUCE non-standard base64 encoding)
 - [x] Encode Python dictionary to Dexed plugin state XML
-- [x] Make changes to Dexed plugin state in a Reaper RPP file and write changed Reaper RPP file
+- [x] Make changes to Dexed plugin state in a Reaper RPP file and write changed Reaper RPP file (e.g, change the loaded bank of voices and the currently loaded voice)
 - [ ] Convert MiniDexed `performance.ini` to Reaper RPP files
 - [ ] Generate Reaper RPP files for TX816 performances
 - [ ] ...
