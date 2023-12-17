@@ -2,9 +2,11 @@
 
 import os
 import base64
-
-import dexed
 import json
+
+# Bundled
+import dexed
+import dx7
 
 # Read reaper.rpp project file
 with open(os.path.dirname(__file__) + '/reaper.rpp', 'r') as f:
@@ -43,12 +45,23 @@ for begin_line_number in dexed_vst3i_line_numbers:
     print(json.dumps(dexed_state_dict, indent=4))
 
     # Edit dexed_state_dict here
-    # dexed_state_dict['dexedState']['@currentProgram'] = "30" # This does not actually change the loaded voice; we would probably need to change the ['dexedState']['dexedBlob']['@currentProgram']
-    dexed_state_dict['dexedState']['@opSwitch'] = "000001" # Only operator 1 is on
-    dexed_state_dict['dexedState']['@wheelMod'] = "7 1 1 1"
-    dexed_state_dict['dexedState']['@footMod'] = "8 1 1 1"
-    dexed_state_dict['dexedState']['@breathMod'] = "9 1 1 1"
-    dexed_state_dict['dexedState']['@aftertouchMod'] = "10 1 1 1"
+    dexed_state_dict['dexedState']['@currentProgram'] = "0" # This does not actually change the loaded voice; to do that, change the ['dexedState']['dexedBlob']['@currentProgram']
+    # dexed_state_dict['dexedState']['@opSwitch'] = "000001" # Only operator 1 is on; seems to change when another program is loaded from the Dexed UI
+    # dexed_state_dict['dexedState']['@wheelMod'] = "7 1 1 1"
+    # dexed_state_dict['dexedState']['@footMod'] = "8 1 1 1"
+    # dexed_state_dict['dexedState']['@breathMod'] = "9 1 1 1"
+    # dexed_state_dict['dexedState']['@aftertouchMod'] = "10 1 1 1"
+    dexed_state_dict['dexedState']['@engineType'] = "0" # Modern
+    
+    # Edit the loaded bank of voices in dexed_state_dict
+    sysex = dx7.make_init_vced32()
+    sysex_hex = ' '.join([hex(b)[2:].zfill(2).upper() for b in sysex])
+    dexed_state_dict['dexedState']['dexedBlob']['@sysex'] = sysex_hex
+
+    # Edit the currently loaded voice in dexed_state_dict
+    program = dx7.init_vced + [0x20, 0x00, 0x00, 0x00, 0x00, 0x00] # TODO: Document what these bytes mean
+    program_hex = ' '.join([hex(b)[2:].zfill(2).upper() for b in program])
+    dexed_state_dict['dexedState']['dexedBlob']['@program'] = program_hex
 
     # Encode dexed_state_dict back to XML
     dexed_state_xml = dexed.construct_dexed_xml(dexed_state_dict)
