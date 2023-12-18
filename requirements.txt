@@ -1,2 +1,2 @@
-inifile
-xmltodict
+inifile-0.4.1
+xmltodict-0.13.0
