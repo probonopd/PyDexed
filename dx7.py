@@ -2,7 +2,8 @@
 
 # 'INIT VOICE' in VCED format
 # 155 bytes
-init_vced = [99, 99, 99, 99,                                                         # OP6 EG RATE 1-4 (0 to 99)
+init_vced = [
+            99, 99, 99, 99,                                                          # OP6 EG RATE 1-4 (0 to 99)
             99, 99, 99, 00,                                                          # OP6 EG LEVEL 1-4 (0 to 99)
             39,                                                                      # OP6 KEYBOARD LEVEL SCALING BREAK POINT (0 to 99)
             0,                                                                       # OP6 KEYBOARD LEVEL SCALING LEFT DEPTH (0 to 99)
@@ -24,7 +25,7 @@ init_vced = [99, 99, 99, 99,                                                    
             99, 99, 99, 99, 99, 99, 99, 00, 39, 0, 0, 0, 0, 0, 0, 0, 99, 0, 1, 0, 7, # OP1
             99, 99, 99, 99,                                                          # PITCH EG RATE 1-4 (0 to 99)
             50, 50, 50, 50,                                                          # PITCH EG LEVEL 1-4 (0 to 99)
-            0,                                                                       # ALGORITHM SELECT (0 to 31)
+            31,                                                                      # ALGORITHM SELECT (0 to 31)
             0,                                                                       # FEEDBACK (0 to 7)
             1,                                                                       # OSCILLATOR KEY SYNC (0:OFF, 1:ON)
             35,                                                                      # LFO SPEED (0 to 99)
@@ -43,6 +44,7 @@ def make_vced(sysex):
     vced = []
     for i in range(7, 162):
         vced.append(sysex[i])
+    assert len(vced) == 155
     return vced
 
 def vced2vmem(vced):
@@ -68,21 +70,47 @@ def vced2vmem(vced):
         vmem[i] = vced[i+27]
     for i in range(len(vmem)):
         vmem[i] = vmem[i]&127
+    assert len(vmem) == 128
     return vmem
 
+
+def vmem2vced(vmem):
+    # Borrowed from https://github.com/rarepixel/dxconvert/blob/master/DXconvert/dx7.py
+    vced=[0]*155
+    for op in range(6):
+        for p in range(11):
+            vced[p+21*op] = vmem[p+17*op]&127
+        vced[11+21*op] = vmem[11+17*op]&0b11
+        vced[12+21*op] = (vmem[11+17*op]&0b1100)>>2
+        vced[13+21*op] = vmem[12+17*op]&0b111
+        vced[20+21*op] = (vmem[12+17*op]&0b1111000)>>3
+        vced[14+21*op] = vmem[13+17*op]&0b11
+        vced[15+21*op] = (vmem[13+17*op]&0b11100)>>2
+        vced[16+21*op] = vmem[14+17*op]&127
+        vced[17+21*op] = vmem[15+17*op]&1
+        vced[18+21*op] = (vmem[15+17*op]&0b111110)>>1
+        vced[19+21*op] = vmem[16+17*op]&127
+    for p in range(102, 110):
+        vced[p+24] = vmem[p]&127
+    vced[134] = vmem[110]&0b11111
+    vced[135] = vmem[111]&0b0111
+    vced[136] = (vmem[111]&0b1000)>>3
+    for p in range(112, 116):
+        vced[p+25] = vmem[p]&127
+    vced[141] = vmem[116]&1
+    vced[142] = (vmem[116]&0b1110)>>1
+    vced[143] = (vmem[116]&0b1110000)>>4
+    for p in range(117, 128):
+        vced[p+27] = vmem[p]
+    for i in range(len(vced)):
+        vced[i] = vced[i]&127
+    assert len(vced) == 155
+    return vced
+
 init_vmem = vced2vmem(init_vced)
-print("Size of init_vmem: ", len(init_vmem))
-# Print as decimal
-for i in range(len(init_vmem)):
-    print(init_vmem[i], end=", ")
-print()
 
 # 32 times init_vmem
 init_vmem32 = init_vmem*32
-
-print("Size of init_vmem32:", len(init_vmem32))
-
-# Number of bytes in the sysex (= packed 32-voice data): 4104
 
 # Make a sysex message from a bank of 32 VCED voices
 def make_sysex32(vced32):
@@ -96,27 +124,40 @@ def make_sysex32(vced32):
     checksum = 128 - (128-sum(vced32)&127)%128 # TODO: Check whether this is correct
     sysex.append(checksum)
     sysex.append(0xF7)
-
+    assert len(sysex) == 4104
     return sysex
+
+# This can be used to get the currently selected voice from the bank of 32 voices
+def get_vced_from_bank_sysex(sysex, voice_number):
+    vmem = []
+    vced = []
+    for i in range(6 + 128*voice_number, 6 + 128*(voice_number+1)):
+        vmem.append(sysex[i])
+    assert len(vmem) == 128
+    vced = vmem2vced(vmem)
+    assert len(vced) == 155
+    return vced
 
 # Make a bank of 32 VCED voices from a sysex message
 def make_vced32(sysex):
     vced32 = []
     for i in range(7, 4111):
         vced32.append(sysex[i])
+    assert len(vced32) == 4096
     return vced32
 
-def make_init_vced32():
-    # Make a sysex message containing 32 copies of the init voice converted to VMEM
+def make_init_bank_sysex():
+    # Make a sysex message containing 32 copies of the init voice VCED converted to VMEM
     vmem = vced2vmem(init_vced)
     vmem32 = vmem*32
-    sysex = make_sysex32(vmem32)
-    return sysex
+    bank_sysex = make_sysex32(vmem32)
+    assert len(bank_sysex) == 4104
+    return bank_sysex
 
 def main():
     print("Size of the init voice VCED:", len(init_vced))
 
-    multiple_voices_sysex = make_init_vced32()
+    multiple_voices_sysex = make_init_bank_sysex()
     print("Sysex message containing 32 copies of the init voice VCED converted to VMEM, length =", len(multiple_voices_sysex))
 
 if __name__ == "__main__":
