@@ -21,8 +21,19 @@ jobs:
         python-version: "3.11"
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+           python -m pip install --upgrade pip
+           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run
       run: |
-        python minidexed2reaper.py
+           python minidexed2reaper.py
+    - uses: actions/upload-artifact@v3
+      with:
+        name: tx816
+        path: ./tx816.rpp
+    - name: Upload to GitHub Releases (only when building from main branch)
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: |
+           set -ex
+           wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+           bash ./upload.sh ./tx816.zip
+           
