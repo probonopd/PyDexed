@@ -9,6 +9,13 @@ from reaper import *
 
 def main():
 
+    # Check if the file tx816_structure.zip exists
+    if not os.path.isfile("tx816_structure.zip"):
+        # Download the tx816_structure.zip file from GitHub
+        print("Downloading tx816_structure.zip...")
+        urllib.request.urlretrieve("https://github.com/probonopd/PyDexed/files/13707855/tx816_structure.zip", "tx816_structure.zip")
+        print("Download complete.")
+
     # Check if the MDX_Vault-master.zip file exists
     if not os.path.isfile("MDX_Vault-main.zip"):
         # Download the MDX_Vault-master.zip file from GitHub
@@ -23,8 +30,15 @@ def main():
         urllib.request.urlretrieve("http://hsjp.eu/downloads/Dexed/Dexed_cart_1.0.zip", "Dexed_cart_1.0.zip")
         print("Download complete.")
 
-    rpp = ReaperProject(os.path.dirname(__file__) + '/tx816_structure.rpp')
+    # Unzip the tx816_structure.rpp file from tx816_structure.zip
+    with zipfile.ZipFile("tx816_structure.zip", 'r') as zip:
+        filename = "tx816_structure.rpp"
+        zip.extract(filename)
+
+    rpp = ReaperProject('tx816_structure.rpp')
     rpp.read()
+    os.remove('tx816_structure.rpp')
+
     initial_number_of_lines = len(rpp.lines)
 
     number_of_dexed_instances = len(rpp.find_plugin_instances("Dexed"))
