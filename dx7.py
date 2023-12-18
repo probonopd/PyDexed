@@ -112,7 +112,7 @@ init_vmem = vced2vmem(init_vced)
 # 32 times init_vmem
 init_vmem32 = init_vmem*32
 
-# Make a sysex message from a bank of 32 VCED voices
+# Make a sysex message from a bank of 32 voices
 def make_sysex32(vced32):
     sysex = [0xF0, 0x43, 0x00, 0x09, 0x20, 0x00]
     for i in range(len(vced32)):
@@ -137,14 +137,6 @@ def get_vced_from_bank_sysex(sysex, voice_number):
     vced = vmem2vced(vmem)
     assert len(vced) == 155
     return vced
-
-# Make a bank of 32 VCED voices from a sysex message
-def make_vced32(sysex):
-    vced32 = []
-    for i in range(7, 4111):
-        vced32.append(sysex[i])
-    assert len(vced32) == 4096
-    return vced32
 
 def make_init_bank_sysex():
     # Make a sysex message containing 32 copies of the init voice VCED converted to VMEM
