@@ -246,7 +246,7 @@ def main():
         # print(rpp.lines[volume_pan_line_number])
 
         """
-        <CONTAINER Container "<nothing or something>"
+        <CONTAINER Container "<...>"
         """
 
         # Find the numbers of all lines that contain "<CONTAINER Container" after whitespace
@@ -273,7 +273,7 @@ def main():
             rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'NAME "' + track_names[y] + '"')
             y += 1
 
-    # Find all lins that contain "FLOATPOS " after whitespace and set them to "FLOATPOS 0 0 0 0"
+    # Find all lines that contain "FLOATPOS " after whitespace and set them to "FLOATPOS 0 0 0 0"
     for line in rpp.lines:
         if line.lstrip().startswith('FLOATPOS '):
             indentation = len(line) - len(line.lstrip())
