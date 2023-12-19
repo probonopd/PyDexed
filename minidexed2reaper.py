@@ -47,10 +47,10 @@ def main():
 
     track_names = []
 
-    i = 0
+    dexed_instance_number = 0
     for plugin_instance in rpp.find_plugin_instances("Dexed"):
-        track_number = i // 8
-        tg_number = i % 8
+        track_number = dexed_instance_number // 8
+        tg_number = dexed_instance_number % 8
 
         # Find the ini file for the current track number
         zipped_file = zipfile.ZipFile("MDX_Vault-main.zip")
@@ -83,7 +83,7 @@ def main():
         panN_ini = ini.get('Pan' + str(tg_number+1))
         # Find the numbers of all lines that contain "<JS utility/volume_pan" after whitespace, and add 1 to each of them
         # (these are the lines that contain the volume and pan values for the Dexed instances)
-        volume_pan_line_number = [i+1 for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<JS utility/volume_pan')][tg_number]
+        volume_pan_line_number = [i+1 for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<JS utility/volume_pan')][dexed_instance_number]
         # Get the number of leading spaces in the line
         indent = len(rpp.lines[volume_pan_line_number]) - len(rpp.lines[volume_pan_line_number].lstrip())
         # This line contains multiple fields, each separated by a space
@@ -111,7 +111,7 @@ def main():
                 
         # For the first 8 plugin instances, set the program to 0, for the next 8 plugin instances, set the program to 1, and so on
         # print ("Setting instance " + str(i) + " to program " + str(track_number))
-        i += 1
+        
         DS.dexed_state_dict['dexedState']['@currentProgram'] = str(track_number)
 
         # NOTE: This does not actually change the loaded voice; to do that, change the ['dexedState']['dexedBlob']['@program']
@@ -151,7 +151,7 @@ def main():
         # "Dexed_cart_1.0/Original Yamaha/TX816/Tfi1.syx" for instance 0, "Tfi2.syx" for instance 1,
         # "Tfi1.syx" again for instance 8, "Tfi2.syx" again for instance 9, and so on
         for file in zipped_file.namelist():
-            if file.startswith("Dexed_cart_1.0/Original Yamaha/TX816/Tfi" + str((i-1)%8+1) + ".syx"):
+            if file.startswith("Dexed_cart_1.0/Original Yamaha/TX816/Tfi" + str((dexed_instance_number)%8+1) + ".syx"):
                 sysex_file_name = file
                 break
         # Extract the sysex file to the current directory
@@ -186,38 +186,64 @@ def main():
         assert voice["Voice"] == name
         # Construct the dexed_state_dict['dexedState']['@wheelMod'] value given the above format, based on the content of tx816 function_data
         converted_wheelMod = voice["R MOD"] + " " + voice["P MOD"] + " " + voice["A MOD"] + " " + voice["E MOD"]
-        print("Converted wheelMod: " + converted_wheelMod)
+        # print("Converted wheelMod: " + converted_wheelMod)
         DS.dexed_state_dict['dexedState']['@wheelMod'] = converted_wheelMod
         converted_aftertouchMod = voice["R A.TCH"] + " " + voice["P A.TCH"] + " " + voice["A A.TCH"] + " " + voice["E A.TCH"]
-        print("Converted aftertouchMod: " + converted_aftertouchMod)
+        # print("Converted aftertouchMod: " + converted_aftertouchMod)
         DS.dexed_state_dict['dexedState']['@aftertouchMod'] = converted_aftertouchMod
         converted_footMod = voice["R F.C"] + " " + voice["P F.C"] + " " + voice["A F.C"] + " " + voice["E F.C"]
-        print("Converted footMod: " + converted_footMod)
+        # print("Converted footMod: " + converted_footMod)
         DS.dexed_state_dict['dexedState']['@footMod'] = converted_footMod
         converted_breathMod = voice["R B.C"] + " " + voice["P B.C"] + " " + voice["A B.C"] + " " + voice["E B.C"]
-        print("Converted breathMod: " + converted_breathMod)
+        # print("Converted breathMod: " + converted_breathMod)
         DS.dexed_state_dict['dexedState']['@breathMod'] = converted_breathMod
         print("")
 
-        
         plugin_instance.update_blob(1, (DS.get_data_blob()))
-    
+
+        """
+          <JS midi/midi_note_filter ""
+          21 108 0 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        """
+
+        # Get the MIDI notes from tx816 function_data
+        low_note = str(tx816.convert_named_note_to_midi(voice["LOW"]))
+        high_note = str(tx816.convert_named_note_to_midi(voice["HIGH"]))
+
+        # Find the numbers of all lines that contain "<JS midi/midi_note_filter" after whitespace, and add 1 to each of them
+        # (these are the lines that contain the MIDI note filter values for the Dexed instances)
+        midi_note_filter_line_number = [i+1 for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<JS midi/midi_note_filter')][dexed_instance_number]
+        # print(rpp.lines[midi_note_filter_line_number])
+        # Get the number of leading spaces in the line
+        indent = len(rpp.lines[midi_note_filter_line_number]) - len(rpp.lines[midi_note_filter_line_number].lstrip())
+        # This line contains multiple fields, each separated by a space
+        fields = rpp.lines[midi_note_filter_line_number].strip().split(' ')
+        fields[1] = high_note
+        fields[2] = low_note
+        print("Low note: " + low_note + ", high note: " + high_note)
+        # Replace the line with the modified line
+        rpp.lines[midi_note_filter_line_number] = ' ' * indent + ' '.join(fields)
+        # print(rpp.lines[midi_note_filter_line_number])
+
+        dexed_instance_number += 1
+
     # Find all lines that contain '<CONTAINER Container ""' after whitespace and name them like this:
     # TG1, TG2, TG3, TG4, TG5, TG6, TG7, TG8, then start again with TG1, TG2, etc.
-    i = 1
+    x = 1
     for line in rpp.lines:    
         if '<CONTAINER Container ""' in line:
-            rpp.lines[rpp.lines.index(line)] = line.replace('<CONTAINER Container ""', '<CONTAINER Container "TG' + str(i) + '"')
-            i += 1
-            if i > 8:
-                i = 1
+            rpp.lines[rpp.lines.index(line)] = line.replace('<CONTAINER Container ""', '<CONTAINER Container "TG' + str(x) + '"')
+            x += 1
+            if x > 8:
+                x = 1
 
     # Find all lines that contain 'NAME ""' after whitespace and use track_names to name them
-    i = 0
+    y = 0
     for line in rpp.lines:    
         if 'NAME ""' in line:
-            rpp.lines[rpp.lines.index(line)] = line.replace('NAME ""', 'NAME "' + track_names[i] + '"')
-            i += 1
+            rpp.lines[rpp.lines.index(line)] = line.replace('NAME ""', 'NAME "' + track_names[y] + '"')
+            y += 1
 
 
     assert len(rpp.lines) == initial_number_of_lines
