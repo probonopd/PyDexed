@@ -200,7 +200,7 @@ def main():
         fields = rpp.lines[midi_note_filter_line_number].strip().split(' ')
         fields[1] = high_note
         fields[2] = low_note
-        print("Low note: " + low_note + ", high note: " + high_note)
+        # print("Low note: " + low_note + ", high note: " + high_note)
         # Replace the line with the modified line
         rpp.lines[midi_note_filter_line_number] = ' ' * indent + ' '.join(fields)
         # print(rpp.lines[midi_note_filter_line_number])
@@ -245,25 +245,60 @@ def main():
         rpp.lines[volume_pan_line_number] = ' ' * indent + ' '.join(fields)
         # print(rpp.lines[volume_pan_line_number])
 
-        dexed_instance_number += 1
+        """
+        <CONTAINER Container "<nothing or something>"
+        """
 
-    # Find all lines that contain '<CONTAINER Container ""' after whitespace and name them like this:
-    # TG1, TG2, TG3, TG4, TG5, TG6, TG7, TG8, then start again with TG1, TG2, etc.
-    x = 1
-    for line in rpp.lines:    
-        if '<CONTAINER Container ""' in line:
-            rpp.lines[rpp.lines.index(line)] = line.replace('<CONTAINER Container ""', '<CONTAINER Container "TG' + str(x) + '"')
-            x += 1
-            if x > 8:
-                x = 1
+        # Find the numbers of all lines that contain "<CONTAINER Container" after whitespace
+        # (these are the lines that contain the track names for the Dexed instances)
+        container_line_number = [i for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<CONTAINER Container')][dexed_instance_number]
+        # print(rpp.lines[container_line_number])
+        # Get the number of leading spaces in the line
+        indent = len(rpp.lines[container_line_number]) - len(rpp.lines[container_line_number].lstrip())
+        # This line contains multiple fields, each separated by '"' characters
+        fields = rpp.lines[container_line_number].strip().split('"')
+        # Replace the value of the second field with "TGx" and the voice name
+        fields[1] = "TG" + str(tg_number+1) + " " + voice["Voice"] # TODO: Use description
+        # Replace the line with the modified line
+        rpp.lines[container_line_number] = ' ' * indent + '"'.join(fields)
+        # print(rpp.lines[container_line_number])
+
+        dexed_instance_number += 1
 
     # Find all lines that contain 'NAME ""' after whitespace and use track_names to name them
     y = 0
     for line in rpp.lines:    
-        if 'NAME ""' in line:
-            rpp.lines[rpp.lines.index(line)] = line.replace('NAME ""', 'NAME "' + track_names[y] + '"')
+        if line.lstrip().startswith('NAME '):
+            indentation = len(line) - len(line.lstrip())
+            rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'NAME "' + track_names[y] + '"')
             y += 1
 
+    # Find all lins that contain "FLOATPOS " after whitespace and set them to "FLOATPOS 0 0 0 0"
+    for line in rpp.lines:
+        if line.lstrip().startswith('FLOATPOS '):
+            indentation = len(line) - len(line.lstrip())
+            rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'FLOATPOS 0 0 0 0')
+
+    # Make the first item the selected item each in FX window and container
+    # Find all lines that contain "LASTSEL " after whitespace and set them to "LASTSEL 1"
+    for line in rpp.lines:
+        if line.lstrip().startswith('LASTSEL '):
+            indentation = len(line) - len(line.lstrip())
+            rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'LASTSEL 1')
+
+    # Unmute and unsolo all tracks
+    # Find all lines that start with "MUTESOLO" after whitespace and set them to "MUTESOLO 0 0 0"
+    for line in rpp.lines:    
+        if line.lstrip().startswith('MUTESOLO '):
+            indentation = len(line) - len(line.lstrip())
+            rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'MUTESOLO 0 0 0')
+
+    # Make all tracks listen to all MIDI channels on all devices
+    # Find all lines that start with "REC " after whitespace and set them to "REC 0 5088 1 0 0 0 0 0"
+    for line in rpp.lines:
+        if line.lstrip().startswith('REC '):
+            indentation = len(line) - len(line.lstrip())
+            rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'REC 0 5088 1 0 0 0 0 0')
 
     assert len(rpp.lines) == initial_number_of_lines
     rpp.write('tx816.rpp')
