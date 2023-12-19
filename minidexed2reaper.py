@@ -79,27 +79,6 @@ def main():
         # Delete the ini file
         os.remove(os.path.basename(ini_file_name))
 
-        # Set the pan in the "JS utility/volume_pan" plugin
-        panN_ini = ini.get('Pan' + str(tg_number+1))
-        # Find the numbers of all lines that contain "<JS utility/volume_pan" after whitespace, and add 1 to each of them
-        # (these are the lines that contain the volume and pan values for the Dexed instances)
-        volume_pan_line_number = [i+1 for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<JS utility/volume_pan')][dexed_instance_number]
-        # Get the number of leading spaces in the line
-        indent = len(rpp.lines[volume_pan_line_number]) - len(rpp.lines[volume_pan_line_number].lstrip())
-        # This line contains multiple fields, each separated by a space
-        fields = rpp.lines[volume_pan_line_number].strip().split(' ')
-        # Replace the 2nd field (the pan) with -100 to 100
-        # panN_ini goes from 0 to 127, so we need to convert it to -100 to 100
-        converted_pan = int(panN_ini) * 200 / 127 - 100
-        allowed_values = [-100, -66, -50, -33, -25, -10, -5, 0, 5, 10, 25, 33, 50, 66, 100]
-        # Find the closest allowed value
-        converted_pan = min(allowed_values, key=lambda x:abs(x-converted_pan))
-        # print("Original pan: " + panN_ini + ", converted pan: " + str(converted_pan))
-        fields[1] = str(converted_pan)
-        # Replace the line with the modified line
-        rpp.lines[volume_pan_line_number] = ' ' * indent + ' '.join(fields)
-        # print(rpp.lines[volume_pan_line_number])
-
         # NOTE: This only works as long as editing the plugin_instance object does not change the number of lines in rpp.lines;
         # if it did, the line numbers of the other plugin instances would be wrong and we would have to find them again in each iteration
         # (this is probably where we would need to start using the UUIDs of the plugin instances)
@@ -225,6 +204,46 @@ def main():
         # Replace the line with the modified line
         rpp.lines[midi_note_filter_line_number] = ' ' * indent + ' '.join(fields)
         # print(rpp.lines[midi_note_filter_line_number])
+
+        """
+                <JS utility/volume_pan ""
+          0 66 0 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        >
+        """
+
+        # Find the numbers of all lines that contain "<JS utility/volume_pan" after whitespace, and add 1 to each of them
+        # (these are the lines that contain the volume and pan values for the Dexed instances)
+        volume_pan_line_number = [i+1 for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<JS utility/volume_pan')][dexed_instance_number]
+        # print(rpp.lines[volume_pan_line_number])
+        # Get the number of leading spaces in the line
+        indent = len(rpp.lines[volume_pan_line_number]) - len(rpp.lines[volume_pan_line_number].lstrip())
+        # This line contains multiple fields, each separated by a space
+        fields = rpp.lines[volume_pan_line_number].strip().split(' ')
+        # Reduce volume by -9.5 dB to avoid clipping when playing 8 voices at the same time
+        # reduction = 20 * math.log10(1 / math.sqrt(8))
+        # with 8 = number of voices
+        fields[0] = "-9.5"
+        # Pan as per Performance Notes in the TX816 manual
+        if tg_number == 0:
+            pan = -100
+        elif tg_number == 1:
+            pan = 100
+        elif tg_number == 2:
+            pan = -66
+        elif tg_number == 3:
+            pan = 66
+        elif tg_number == 4:
+            pan = -33
+        elif tg_number == 5:
+            pan = 33
+        elif tg_number == 6:
+            pan = 0
+        elif tg_number == 7:
+            pan = 0
+        fields[1] = str(pan) # -100 .. 100
+        # Replace the line with the modified line
+        rpp.lines[volume_pan_line_number] = ' ' * indent + ' '.join(fields)
+        # print(rpp.lines[volume_pan_line_number])
 
         dexed_instance_number += 1
 
