@@ -146,6 +146,16 @@ def make_init_bank_sysex():
     assert len(bank_sysex) == 4104
     return bank_sysex
 
+# Get the name of a voice from a VCED
+def get_voice_name(vced):
+    name = ""
+    for i in range(145, 155):
+        name += chr(vced[i])
+    # Make a string that is 10 characters long, padded with spaces
+    name = name.ljust(10)
+    assert len(name) == 10
+    return name
+
 def main():
     print("Size of the init voice VCED:", len(init_vced))
 

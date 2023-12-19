@@ -15,6 +15,40 @@ The TX816 uses Function Data in addition to Voice Data for each voice
 It is documented in the TX816 Performance Notes, pp. 13
 """
 
+"""
+Format:
+function_data = [
+    {
+        "Voice": "AC.PNO 1.1", # Voice name
+        "POLY/MONO": "POLY", # POLY/MONO mode
+        "mode": "retai", # retai/follo, Retain/Follow mode
+        "gliss": "0", # 0 .. 1, Glissando on/off
+        "time": "0", # Portamento time
+        "LEVEL ATT": "7", # Level attack?
+        "range": "1", # Pitch bender range
+        "step": "0", # Pitch bender step
+        "R MOD": "66", # Range for modulation wheel 
+        "R F.C": "99", # Range for foot controller
+        "R B.C": "0", # Range for breath controller
+        "R A.TCH": "53", # Range for aftertouch
+        "P MOD": "1", # Pitch Target for modulation wheel
+        "P F.C": "0", # Pitch Target for foot controller
+        "P B.C": "0", # Pitch Target for breath controller
+        "P A.TCH": "1", # Pitch Target for aftertouch
+        "A MOD": "0", # Amp Target for modulation wheel
+        "A F.C": "0", # Amp Target for foot controller
+        "A B.C": "0", # Amp Target for breath controller
+        "A A.TCH": "0", # Amp Target for aftertouch
+        "E MOD": "0", # EG BIAS Target for modulation wheel
+        "E F.C": "1", # EG BIAS Target for foot controller
+        "E B.C": "0", # EG BIAS Target for breath controller
+        "E A.TCH": "0", # EG BIAS Target for aftertouch
+        "LOW": "C-2", # Lowest note (needs to be converted to MIDI note number)
+        "HIGH": "G8" # Highest note (needs to be converted to MIDI note number)
+    }
+]
+"""
+
 function_data = [
     {
         "Voice": "AC.PNO 1.1",

@@ -6,6 +6,7 @@ import urllib.request
 import zipfile
 
 from reaper import *
+import tx816
 
 def main():
 
@@ -134,42 +135,6 @@ def main():
         converted_monoMode = int(monoModeN_ini) #  Dexed expects: 0 .. 1
         DS.dexed_state_dict['dexedState']['@monoMode'] = str(converted_monoMode)
 
-        modulationWheelRangeN_ini = ini.get('ModulationWheelRange' + str(tg_number+1)) # 0 .. 99
-        converted_modulationWheelRange = int(modulationWheelRangeN_ini)/99 #  Dexed expects: 0 .. 1
-        
-        modulationWheelTarget1= ini.get('ModulationWheelTarget' + str(tg_number+1)) # 0 .. 7
-        # This is binary coded: Pitch Target adds 1, Amp Target adds 2, EG BIAS Target adds 4 # TODO: Check whether this is correct
-
-        # dexedState ...Mod values are 4 values separated by spaces
-        # 1st value: Range 0 .. 99
-        # 2nd value: Pitch Target 0/1
-        # 3rd value: Amp Target 0/1
-        # 4th value: EG BIAS Target 0/1
-
-        # Construct the dexed_state_dict['dexedState']['@wheelMod'] value given the above.
-        # For example, if modulationWheelTarget1 is 3, and converted_modulationWheelRange is 0.5, then the line should be:
-        # "0.5 1 1 0"
-        converted_wheelMod = str(converted_modulationWheelRange) + " " + str(int(modulationWheelTarget1) & 1) + " " + str(int(modulationWheelTarget1) & 2) + " " + str(int(modulationWheelTarget1) & 4)
-        DS.dexed_state_dict['dexedState']['@wheelMod'] = converted_wheelMod
-
-        footControlRangeN_ini = ini.get('FootControlRange' + str(tg_number+1)) # 0 .. 99
-        converted_footControlRange = int(footControlRangeN_ini)/99 #  Dexed expects: 0 .. 1
-        footControlTarget1= ini.get('FootControlTarget' + str(tg_number+1)) # 0 .. 7
-        converted_footMod = str(converted_footControlRange) + " " + str(int(footControlTarget1) & 1) + " " + str(int(footControlTarget1) & 2) + " " + str(int(footControlTarget1) & 4)
-        DS.dexed_state_dict['dexedState']['@footMod'] = converted_footMod
-
-        breathControlRangeN_ini = ini.get('BreathControlRange' + str(tg_number+1)) # 0 .. 99
-        converted_breathControlRange = int(breathControlRangeN_ini)/99 #  Dexed expects: 0 .. 1
-        breathControlTarget1= ini.get('BreathControlTarget' + str(tg_number+1)) # 0 .. 7
-        converted_breathMod = str(converted_breathControlRange) + " " + str(int(breathControlTarget1) & 1) + " " + str(int(breathControlTarget1) & 2) + " " + str(int(breathControlTarget1) & 4)
-        DS.dexed_state_dict['dexedState']['@breathMod'] = converted_breathMod
-
-        aftertouchRangeN_ini = ini.get('AftertouchRange' + str(tg_number+1)) # 0 .. 99
-        converted_aftertouchRange = int(aftertouchRangeN_ini)/99 #  Dexed expects: 0 .. 1
-        aftertouchTarget1= ini.get('AftertouchTarget' + str(tg_number+1)) # 0 .. 7
-        converted_aftertouchMod = str(converted_aftertouchRange) + " " + str(int(aftertouchTarget1) & 1) + " " + str(int(aftertouchTarget1) & 2) + " " + str(int(aftertouchTarget1) & 4)
-        DS.dexed_state_dict['dexedState']['@aftertouchMod'] = converted_aftertouchMod
-
         DS.dexed_state_dict['dexedState']['@engineType'] = "0" # Modern
 
         # Change the detune according to the detuneN in the ini file
@@ -207,6 +172,33 @@ def main():
         program = vced + [0x20, 0x00, 0x00, 0x00, 0x00, 0x00] # TODO: Document what these bytes mean
         program_hex = ' '.join([hex(b)[2:].zfill(2).upper() for b in program])
         DS.dexed_state_dict['dexedState']['dexedBlob']['@program'] = program_hex
+
+        # Get the name of the voice from the VCED
+        name = dx7.get_voice_name(vced)
+        print("Voice name from VCED: " + name)
+
+        # Construct the dexed_state_dict['dexedState']['@wheelMod'] value given the above format, based on the content of tx816 function_data
+        # For example, if the voice name is "AC.PNO 1.1", then dexed_state_dict['dexedState']['@wheelMod'] should be
+        # "66 1 0 0" because the "R MOD" value for this voice is 66, and the "P MOD", "A MOD", and "E MOD" values are 1, 0, and 0 respectively
+            
+        # Find the voice in tx816 function_data
+        voice = [voice for voice in tx816.function_data if voice["Voice"] == name][0]
+        assert voice["Voice"] == name
+        # Construct the dexed_state_dict['dexedState']['@wheelMod'] value given the above format, based on the content of tx816 function_data
+        converted_wheelMod = voice["R MOD"] + " " + voice["P MOD"] + " " + voice["A MOD"] + " " + voice["E MOD"]
+        print("Converted wheelMod: " + converted_wheelMod)
+        DS.dexed_state_dict['dexedState']['@wheelMod'] = converted_wheelMod
+        converted_aftertouchMod = voice["R A.TCH"] + " " + voice["P A.TCH"] + " " + voice["A A.TCH"] + " " + voice["E A.TCH"]
+        print("Converted aftertouchMod: " + converted_aftertouchMod)
+        DS.dexed_state_dict['dexedState']['@aftertouchMod'] = converted_aftertouchMod
+        converted_footMod = voice["R F.C"] + " " + voice["P F.C"] + " " + voice["A F.C"] + " " + voice["E F.C"]
+        print("Converted footMod: " + converted_footMod)
+        DS.dexed_state_dict['dexedState']['@footMod'] = converted_footMod
+        converted_breathMod = voice["R B.C"] + " " + voice["P B.C"] + " " + voice["A B.C"] + " " + voice["E B.C"]
+        print("Converted breathMod: " + converted_breathMod)
+        DS.dexed_state_dict['dexedState']['@breathMod'] = converted_breathMod
+        print("")
+
         
         plugin_instance.update_blob(1, (DS.get_data_blob()))
     
