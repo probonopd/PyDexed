@@ -20,6 +20,7 @@ Format:
 function_data = [
     {
         "Voice": "AC.PNO 1.1", # Voice name
+        "Description": " Piano L", # Voice description
         "POLY/MONO": "POLY", # POLY/MONO mode
         "mode": "retai", # retai/follo, Retain/Follow mode
         "gliss": "0", # 0 .. 1, Glissando on/off
@@ -52,6 +53,7 @@ function_data = [
 function_data = [
     {
         "Voice": "AC.PNO 1.1",
+        "Description": "Piano L",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -80,6 +82,7 @@ function_data = [
     },
     {
         "Voice": "AC.PNO 1.2",
+        "Description": "Piano R",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -108,6 +111,7 @@ function_data = [
     },
     {
         "Voice": "PNO.B  1.3",
+        "Description": "Bass End",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -136,6 +140,7 @@ function_data = [
     },
     {
         "Voice": "AC.PNO 1.4",
+        "Description": "Treble End",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -164,6 +169,7 @@ function_data = [
     },
     {
         "Voice": "AC.PNO 1.5",
+        "Description": "Solid",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -192,6 +198,7 @@ function_data = [
     },
     {
         "Voice": "AC.PNO 1.6",
+        "Description": "Bright",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -220,6 +227,7 @@ function_data = [
     },
     {
         "Voice": "AC.PNO 1.7",
+        "Description": "Hammer Noise",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -248,6 +256,7 @@ function_data = [
     },
     {
         "Voice": "OCT.R. 1.8",
+        "Description": "Upper Octave Ring",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -276,6 +285,7 @@ function_data = [
     },
     {
         "Voice": "STRGS  2.1",
+        "Description": "Strings Light 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -304,6 +314,7 @@ function_data = [
     },
     {
         "Voice": "STRGS  2.2",
+        "Description": "Strings Light 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -332,6 +343,7 @@ function_data = [
     },
     {
         "Voice": "STRG.H.2.3",
+        "Description": "Strings Heavy 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -360,6 +372,7 @@ function_data = [
     },
     {
         "Voice": "STRG.H.2.4",
+        "Description": "Strings Heavy 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -388,6 +401,7 @@ function_data = [
     },
     {
         "Voice": "STRG.M.2.5",
+        "Description": "Strings Mellow 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -416,6 +430,7 @@ function_data = [
     },
     {
         "Voice": "STRG.M.2.6",
+        "Description": "Strings Mellow 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -444,6 +459,7 @@ function_data = [
     },
     {
         "Voice": "STRGS  2.7",
+        "Description": "Strings Light 3 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -472,6 +488,7 @@ function_data = [
     },
     {
         "Voice": "VIOLIN 2.8",
+        "Description": "Solo Violin Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -500,6 +517,7 @@ function_data = [
     },
     {
         "Voice": "P.ORG  3.1",
+        "Description": "Closed Pipe Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -528,6 +546,7 @@ function_data = [
     },
     {
         "Voice": "P.ORG  3.2",
+        "Description": "Open Pipe",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -556,6 +575,7 @@ function_data = [
     },
     {
         "Voice": "P.ORG  3.3",
+        "Description": "Low Mid Pipe Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -584,6 +604,7 @@ function_data = [
     },
     {
         "Voice": "P.ORG  3.4",
+        "Description": "Reeds Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -612,6 +633,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  3.5",
+        "Description": "Female Vocal Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -640,6 +662,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  3.6",
+        "Description": "Male Bass Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -668,6 +691,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  3.7",
+        "Description": "Male Alto Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -696,6 +720,7 @@ function_data = [
     },
     {
         "Voice": "P.ORG  3.8",
+        "Description": "Bass Pipes Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -724,6 +749,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  4.1",
+        "Description": "Male Bass 1 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -752,6 +778,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  4.2",
+        "Description": "Male Tenor Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -780,6 +807,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  4.3",
+        "Description": "Male Bass 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -808,6 +836,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  4.4",
+        "Description": "Male Bass 3 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -836,6 +865,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  4.5",
+        "Description": "Female Vocal 1 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -864,6 +894,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  4.6",
+        "Description": "Female Vocal 2 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -892,6 +923,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  4.7",
+        "Description": "Male Bass 4 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -920,6 +952,7 @@ function_data = [
     },
     {
         "Voice": "VOICE  4.8",
+        "Description": "Female Vocal 3 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -948,6 +981,7 @@ function_data = [
     },
     {
         "Voice": "TRMPT  5.1",
+        "Description": "Trumpet 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -976,6 +1010,7 @@ function_data = [
     },
     {
         "Voice": "TRMPT  5.2",
+        "Description": "Trumpet 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1004,6 +1039,7 @@ function_data = [
     },
     {
         "Voice": "TRMPT  5.3",
+        "Description": "Trumpet 3 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1032,6 +1068,7 @@ function_data = [
     },
     {
         "Voice": "TRMPT  5.4",
+        "Description": "Trumpet 4 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1060,6 +1097,7 @@ function_data = [
     },
     {
         "Voice": "TRMPT  5.5",
+        "Description": "Trumpet 5 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1088,6 +1126,7 @@ function_data = [
     },
     {
         "Voice": "TRMPT  5.6",
+        "Description": "Trumpet 6 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1116,6 +1155,7 @@ function_data = [
     },
     {
         "Voice": "SYNTRP 5.7",
+        "Description": "Synth Trumpet Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1144,6 +1184,7 @@ function_data = [
     },
     {
         "Voice": "B.TRP  5.8",
+        "Description": "Bright Trumpet Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1172,6 +1213,7 @@ function_data = [
     },
     {
         "Voice": "E.PNO  6.1",
+        "Description": "Elec. Piano Tremolo L Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1200,6 +1242,7 @@ function_data = [
     },
     {
         "Voice": "E.PNO  6.2",
+        "Description": "Elec. Piano Tremolo R Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1228,6 +1271,7 @@ function_data = [
     },
     {
         "Voice": "E.TPNO 6.3",
+        "Description": "Tine Piano 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1256,6 +1300,7 @@ function_data = [
     },
     {
         "Voice": "E.TPNO 6.4",
+        "Description": "Tine Piano 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1284,6 +1329,7 @@ function_data = [
     },
     {
         "Voice": "E.PNO  6.5",
+        "Description": "Elec. Piano 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1312,6 +1358,7 @@ function_data = [
     },
     {
         "Voice": "E.PNO  6.6",
+        "Description": "Elec. Piano 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1340,6 +1387,7 @@ function_data = [
     },
     {
         "Voice": "T.PNO  6.7",
+        "Description": "Tine Piano 3",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1368,6 +1416,7 @@ function_data = [
     },
     {
         "Voice": "T.PNO  6.8",
+        "Description": "Tine Piano 4",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1396,6 +1445,7 @@ function_data = [
     },
     {
         "Voice": "CELLO  7.1",
+        "Description": "Cello 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1424,6 +1474,7 @@ function_data = [
     },
     {
         "Voice": "CELLO  7.2",
+        "Description": "Cello 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1452,6 +1503,7 @@ function_data = [
     },
     {
         "Voice": "CELLO  7.3",
+        "Description": "Cello 3 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1480,6 +1532,7 @@ function_data = [
     },
     {
         "Voice": "CELLO  7.4",
+        "Description": "Cello 4 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1508,6 +1561,7 @@ function_data = [
     },
     {
         "Voice": "CELLO  7.5",
+        "Description": "Cello 5 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1536,6 +1590,7 @@ function_data = [
     },
     {
         "Voice": "CELLO  7.6",
+        "Description": "Cello 6 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1564,6 +1619,7 @@ function_data = [
     },
     {
         "Voice": "CELLO  7.7",
+        "Description": "Bowed Cello 1 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1592,6 +1648,7 @@ function_data = [
     },
     {
         "Voice": "CELLO  7.8",
+        "Description": "Bowed Cello 2 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -1620,6 +1677,7 @@ function_data = [
     },
     {
         "Voice": "E.ORG  8.1",
+        "Description": "Roto Slow Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1648,6 +1706,7 @@ function_data = [
     },
     {
         "Voice": "E.ORG  8.2",
+        "Description": "Roto Fast Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1676,6 +1735,7 @@ function_data = [
     },
     {
         "Voice": "B.ORG  8.3",
+        "Description": "Basic Organ 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1704,6 +1764,7 @@ function_data = [
     },
     {
         "Voice": "B.ORG  8.4",
+        "Description": "Basic Organ 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -1732,6 +1793,7 @@ function_data = [
     },
     {
         "Voice": "F.ORG  8.5",
+        "Description": "Full Organ 1 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1760,6 +1822,7 @@ function_data = [
     },
     {
         "Voice": "F.ORG  8.6",
+        "Description": "Full Organ 2 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1788,6 +1851,7 @@ function_data = [
     },
     {
         "Voice": "T.ORG  8.7",
+        "Description": "Touch Organ Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1816,6 +1880,7 @@ function_data = [
     },
     {
         "Voice": "F.ORG  8.8",
+        "Description": "Full Organ 3 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1844,6 +1909,7 @@ function_data = [
     },
     {
         "Voice": "E.HORN 9.1",
+        "Description": "Electro Horn 1 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1872,6 +1938,7 @@ function_data = [
     },
     {
         "Voice": "E.HORN 9.2",
+        "Description": "Electro Horn 2 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1900,6 +1967,7 @@ function_data = [
     },
     {
         "Voice": "M.HORN 9.3",
+        "Description": "Mellow Horn 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1928,6 +1996,7 @@ function_data = [
     },
     {
         "Voice": "M.HORN 9.4",
+        "Description": "Mellow Horn 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1956,6 +2025,7 @@ function_data = [
     },
     {
         "Voice": "B.HORN 9.5",
+        "Description": "Bright Horn 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -1984,6 +2054,7 @@ function_data = [
     },
     {
         "Voice": "B.HORN 9.6",
+        "Description": "Bright Horn 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2012,6 +2083,7 @@ function_data = [
     },
     {
         "Voice": "BC.HRN 9.7",
+        "Description": "Breath Control Horn 1 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2040,6 +2112,7 @@ function_data = [
     },
     {
         "Voice": "BC HRN 9.8",
+        "Description": "Breath Control Horn 2 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2068,6 +2141,7 @@ function_data = [
     },
     {
         "Voice": "PCSYN 10.1",
+        "Description": "Percussive Synth 1 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2096,6 +2170,7 @@ function_data = [
     },
     {
         "Voice": "PCSYN 10.2",
+        "Description": "Percussive Synth 2 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2124,6 +2199,7 @@ function_data = [
     },
     {
         "Voice": "F.SWP 10.3",
+        "Description": "Filter Sweep 1 Fcf",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2152,6 +2228,7 @@ function_data = [
     },
     {
         "Voice": "F.SWP 10.4",
+        "Description": "Filter Sweep 2 Fcf",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2180,6 +2257,7 @@ function_data = [
     },
     {
         "Voice": "F.SWP 10.5",
+        "Description": "Filter Sweep 3 Fcf",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2208,6 +2286,7 @@ function_data = [
     },
     {
         "Voice": "F.SWP 10.6",
+        "Description": "Filter Sweep 4 Fcf",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2236,6 +2315,7 @@ function_data = [
     },
     {
         "Voice": "CRSYN 10.7",
+        "Description": "Chorus Synth 1 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2264,6 +2344,7 @@ function_data = [
     },
     {
         "Voice": "CRSYN 10.8",
+        "Description": "Chorus Synth 2 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2292,6 +2373,7 @@ function_data = [
     },
     {
         "Voice": "FMPNO 11.1",
+        "Description": "FM Piano 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2320,6 +2402,7 @@ function_data = [
     },
     {
         "Voice": "FMPNO 11.2",
+        "Description": "FM Piano 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2348,6 +2431,7 @@ function_data = [
     },
     {
         "Voice": "M.PNO 11.3",
+        "Description": "Metal Electric Piano 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2376,6 +2460,7 @@ function_data = [
     },
     {
         "Voice": "W.PNO 11.4",
+        "Description": "Wire Electric Piano 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2404,6 +2489,7 @@ function_data = [
     },
     {
         "Voice": "M.PNO 11.5",
+        "Description": "Metal Electric Piano 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2432,6 +2518,7 @@ function_data = [
     },
     {
         "Voice": "W.PNO 11.6",
+        "Description": "Wire Electric Piano 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2460,6 +2547,7 @@ function_data = [
     },
     {
         "Voice": "A.PNO 11.7",
+        "Description": "Acoustic Piano L",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2488,6 +2576,7 @@ function_data = [
     },
     {
         "Voice": "A.PNO 11.8",
+        "Description": "Acoustic Piano R",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2516,6 +2605,7 @@ function_data = [
     },
     {
         "Voice": "TRIGL 12.1",
+        "Description": "Acoustic Triangle",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2544,6 +2634,7 @@ function_data = [
     },
     {
         "Voice": "FLEXI 12.2",
+        "Description": "Flexi",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2572,6 +2663,7 @@ function_data = [
     },
     {
         "Voice": "CHIPB 12.3",
+        "Description": "Chip Blocks",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2600,6 +2692,7 @@ function_data = [
     },
     {
         "Voice": "HNDRM 12.4",
+        "Description": "Hand Drums",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2628,6 +2721,7 @@ function_data = [
     },
     {
         "Voice": "PHOOT 12.5",
+        "Description": "Phloot",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2656,6 +2750,7 @@ function_data = [
     },
     {
         "Voice": "TMBLE 12.6",
+        "Description": "Timbale",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2684,6 +2779,7 @@ function_data = [
     },
     {
         "Voice": "P.DRM 12.7",
+        "Description": "Pan Drum",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2712,6 +2808,7 @@ function_data = [
     },
     {
         "Voice": "ODABL 12.8",
+        "Description": "Oda Bell",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2740,6 +2837,7 @@ function_data = [
     },
     {
         "Voice": "E.PNO 13.1",
+        "Description": "Electric Piano 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2768,6 +2866,7 @@ function_data = [
     },
     {
         "Voice": "E.PNO 13.2",
+        "Description": "Electric Piano 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2796,6 +2895,7 @@ function_data = [
     },
     {
         "Voice": "E.ORG 13.3",
+        "Description": "Electric Organ 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2824,6 +2924,7 @@ function_data = [
     },
     {
         "Voice": "E.ORG 13.4",
+        "Description": "Electric Organ 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2852,6 +2953,7 @@ function_data = [
     },
     {
         "Voice": "BCTRP 13.5",
+        "Description": "Breath Control Trumpet 1 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2880,6 +2982,7 @@ function_data = [
     },
     {
         "Voice": "BCTRP 13.6",
+        "Description": "Breath Control Trumpet 2 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2908,6 +3011,7 @@ function_data = [
     },
     {
         "Voice": "BASS  13.7",
+        "Description": "Bass",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -2936,6 +3040,7 @@ function_data = [
     },
     {
         "Voice": "CLAV  13.8",
+        "Description": "Clav",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2964,6 +3069,7 @@ function_data = [
     },
     {
         "Voice": "E.PNO 14.1",
+        "Description": "Electric Piano 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -2992,6 +3098,7 @@ function_data = [
     },
     {
         "Voice": "E.PNO 14.2",
+        "Description": "Electric Piano 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3020,6 +3127,7 @@ function_data = [
     },
     {
         "Voice": "BCBRS 14.3",
+        "Description": "Breath Control Brass 1 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3048,6 +3156,7 @@ function_data = [
     },
     {
         "Voice": "BCBRS 14.4",
+        "Description": "Breath Control Brass 2 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3076,6 +3185,7 @@ function_data = [
     },
     {
         "Voice": "VIOLN 14.5",
+        "Description": "Violins Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3104,6 +3214,7 @@ function_data = [
     },
     {
         "Voice": "STGBL 14.6",
+        "Description": "String Bells Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3132,6 +3243,7 @@ function_data = [
     },
     {
         "Voice": "SYNST 14.7",
+        "Description": "Synth Strings 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3160,6 +3272,7 @@ function_data = [
     },
     {
         "Voice": "SYNST 14.8",
+        "Description": "Synth Strings 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3188,6 +3301,7 @@ function_data = [
     },
     {
         "Voice": "STGSM 15.1",
+        "Description": "Synth Strings 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3216,6 +3330,7 @@ function_data = [
     },
     {
         "Voice": "STGSB 15.2",
+        "Description": "Strings Bright 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3244,6 +3359,7 @@ function_data = [
     },
     {
         "Voice": "A.GTR 15.3",
+        "Description": "Acoustic Guitar 1 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3272,6 +3388,7 @@ function_data = [
     },
     {
         "Voice": "A.GTR 15.4",
+        "Description": "Acoustic Guitar 2 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3300,6 +3417,7 @@ function_data = [
     },
     {
         "Voice": "STG.M.15.5",
+        "Description": "Strings Mellow 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3328,6 +3446,7 @@ function_data = [
     },
     {
         "Voice": "STG.B 15.6",
+        "Description": "Strings Bright 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3356,6 +3475,7 @@ function_data = [
     },
     {
         "Voice": "OBOE  15.7",
+        "Description": "Breath Control Oboe Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3384,6 +3504,7 @@ function_data = [
     },
     {
         "Voice": "VIOLN 15.8",
+        "Description": "Violins Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3412,6 +3533,7 @@ function_data = [
     },
     {
         "Voice": "PLUK  16.1",
+        "Description": "Plucked 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3440,6 +3562,7 @@ function_data = [
     },
     {
         "Voice": "PLUK  16.2",
+        "Description": "Plucked 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3468,6 +3591,7 @@ function_data = [
     },
     {
         "Voice": "T.RSE 16.3",
+        "Description": "Touch Rise 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -3496,6 +3620,7 @@ function_data = [
     },
     {
         "Voice": "T.RSE 16.4",
+        "Description": "Touch Rise 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "1",
@@ -3524,6 +3649,7 @@ function_data = [
     },
     {
         "Voice": "SD.SD.16.5",
+        "Description": "Side to Side 1 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3552,6 +3678,7 @@ function_data = [
     },
     {
         "Voice": "SD.SD.16.6",
+        "Description": "Side to Side 2 Modulation Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3580,6 +3707,7 @@ function_data = [
     },
     {
         "Voice": "THBL  16.7",
+        "Description": "Thinble Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3608,6 +3736,7 @@ function_data = [
     },
     {
         "Voice": "HIBEL 16.8",
+        "Description": "Hi Bell Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3636,6 +3765,7 @@ function_data = [
     },
     {
         "Voice": "A.PNO 17.1",
+        "Description": "Acoustic Piano 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3664,6 +3794,7 @@ function_data = [
     },
     {
         "Voice": "A.PNO 17.2",
+        "Description": "Acoustic Piano 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3692,6 +3823,7 @@ function_data = [
     },
     {
         "Voice": "A.PNO 17.3",
+        "Description": "Acoustic Piano 3",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3720,6 +3852,7 @@ function_data = [
     },
     {
         "Voice": "A.PNO 17.4",
+        "Description": "Acoustic Piano 4",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3748,6 +3881,7 @@ function_data = [
     },
     {
         "Voice": "VOICE 17.5",
+        "Description": "Male Voice 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3776,6 +3910,7 @@ function_data = [
     },
     {
         "Voice": "VOICE 17.6",
+        "Description": "Male Voice 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3804,6 +3939,7 @@ function_data = [
     },
     {
         "Voice": "VOICE 17.7",
+        "Description": "Tenor Voice 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3832,6 +3968,7 @@ function_data = [
     },
     {
         "Voice": "VOICE 17.8",
+        "Description": "Tenor Voice 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -3860,6 +3997,7 @@ function_data = [
     },
     {
         "Voice": "B.TBS 18.1",
+        "Description": "Big Tubes 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3888,6 +4026,7 @@ function_data = [
     },
     {
         "Voice": "B.TBS 18.2",
+        "Description": "Big Tubes 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3916,6 +4055,7 @@ function_data = [
     },
     {
         "Voice": "DM.VC.18.3",
+        "Description": "Dream Voice 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3944,6 +4084,7 @@ function_data = [
     },
     {
         "Voice": "DM.VC.18.4",
+        "Description": "Dream Voice 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -3972,6 +4113,7 @@ function_data = [
     },
     {
         "Voice": "VOICE 18.5",
+        "Description": "Voices 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4000,6 +4142,7 @@ function_data = [
     },
     {
         "Voice": "VOICE 18.6",
+        "Description": "Voices 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4028,6 +4171,7 @@ function_data = [
     },
     {
         "Voice": "I.SPC 18.7",
+        "Description": "Inner Space 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4056,6 +4200,7 @@ function_data = [
     },
     {
         "Voice": "I.SPC 18.8",
+        "Description": "Inner Space 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4084,6 +4229,7 @@ function_data = [
     },
     {
         "Voice": "DINGL 19.1",
+        "Description": "Dingle Hi 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4112,6 +4258,7 @@ function_data = [
     },
     {
         "Voice": "DINGL 19.2",
+        "Description": "Dingle Hi 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4140,6 +4287,7 @@ function_data = [
     },
     {
         "Voice": "ADTVE 19.3",
+        "Description": "Additive 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4168,6 +4316,7 @@ function_data = [
     },
     {
         "Voice": "ADTVE 19.4",
+        "Description": "Additive 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4196,6 +4345,7 @@ function_data = [
     },
     {
         "Voice": "ADTVE 19.5",
+        "Description": "Additive 3",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4224,6 +4374,7 @@ function_data = [
     },
     {
         "Voice": "ADTVE 19.6",
+        "Description": "Additive 4",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4252,6 +4403,7 @@ function_data = [
     },
     {
         "Voice": "DINGL 19.7",
+        "Description": "Dingle Low 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4280,6 +4432,7 @@ function_data = [
     },
     {
         "Voice": "DINGL 19.8",
+        "Description": "Dingle Low 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4308,6 +4461,7 @@ function_data = [
     },
     {
         "Voice": "P.SYN 20.1",
+        "Description": "Percussive Synth 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4336,6 +4490,7 @@ function_data = [
     },
     {
         "Voice": "P.SYN 20.2",
+        "Description": "Percussive Synth 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4364,6 +4519,7 @@ function_data = [
     },
     {
         "Voice": "SYNBS 20.3",
+        "Description": "Synth Brass 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4392,6 +4548,7 @@ function_data = [
     },
     {
         "Voice": "SYNBS 20.4",
+        "Description": "Synth Brass 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4420,6 +4577,7 @@ function_data = [
     },
     {
         "Voice": "SYNPK 20.5",
+        "Description": "Synth Plucked",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4448,6 +4606,7 @@ function_data = [
     },
     {
         "Voice": "H.MTL 20.6",
+        "Description": "Heavy Metal 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4476,6 +4635,7 @@ function_data = [
     },
     {
         "Voice": "H.MTL 20.7",
+        "Description": "Heavy Metal 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4504,6 +4664,7 @@ function_data = [
     },
     {
         "Voice": "HARPS 20.8",
+        "Description": "Hapsichord",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4532,6 +4693,7 @@ function_data = [
     },
     {
         "Voice": "STRGS 21.1",
+        "Description": "Strings Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4560,6 +4722,7 @@ function_data = [
     },
     {
         "Voice": "E.VLN 21.2",
+        "Description": "Electric Violin Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4588,6 +4751,7 @@ function_data = [
     },
     {
         "Voice": "VIOLN 21.3",
+        "Description": "Violin Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4616,6 +4780,7 @@ function_data = [
     },
     {
         "Voice": "BCBRS 21.4",
+        "Description": "Breath Control Brass 1 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4644,6 +4809,7 @@ function_data = [
     },
     {
         "Voice": "BCBRS 21.5",
+        "Description": "Breath Control Brass 2 Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4672,6 +4838,7 @@ function_data = [
     },
     {
         "Voice": "T.BRS 21.6",
+        "Description": "Touch Brass",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4700,6 +4867,7 @@ function_data = [
     },
     {
         "Voice": "CELLO 21.7",
+        "Description": "Cello Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4728,6 +4896,7 @@ function_data = [
     },
     {
         "Voice": "TMPNI 21.8",
+        "Description": "Timpani Mod Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4756,6 +4925,7 @@ function_data = [
     },
     {
         "Voice": "TRBNE 22.1",
+        "Description": "Trombone 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4784,6 +4954,7 @@ function_data = [
     },
     {
         "Voice": "TRBNE 22.2",
+        "Description": "Trombone 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4812,6 +4983,7 @@ function_data = [
     },
     {
         "Voice": "T.TRP 22.3",
+        "Description": "Touch Trumpet 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4840,6 +5012,7 @@ function_data = [
     },
     {
         "Voice": "T.TRP 22.4",
+        "Description": "Touch Trumpet 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4868,6 +5041,7 @@ function_data = [
     },
     {
         "Voice": "BCSAX 22.5",
+        "Description": "Breath Control Sax Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4896,6 +5070,7 @@ function_data = [
     },
     {
         "Voice": "FLUTE 22.6",
+        "Description": "Flute Mod Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4924,6 +5099,7 @@ function_data = [
     },
     {
         "Voice": "P.BAS 22.7",
+        "Description": "Pizzicato Bass",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -4952,6 +5128,7 @@ function_data = [
     },
     {
         "Voice": "R.CYM 22.8",
+        "Description": "Ride Cymbal",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -4980,6 +5157,7 @@ function_data = [
     },
     {
         "Voice": "CELLO 23.1",
+        "Description": "Bright Cello Mod Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5008,6 +5186,7 @@ function_data = [
     },
     {
         "Voice": "CELLO 23.2",
+        "Description": "Cello 1 Mod Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5036,6 +5215,7 @@ function_data = [
     },
     {
         "Voice": "CELLO 23.3",
+        "Description": "Mellow Cello Mod Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5064,6 +5244,7 @@ function_data = [
     },
     {
         "Voice": "CELLO 23.4",
+        "Description": "Cello 2 Mod Wheel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5092,6 +5273,7 @@ function_data = [
     },
     {
         "Voice": "B.HRN 23.5",
+        "Description": "Breath Horn Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5120,6 +5302,7 @@ function_data = [
     },
     {
         "Voice": "M.HRN 23.6",
+        "Description": "Mellow Horn Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5148,6 +5331,7 @@ function_data = [
     },
     {
         "Voice": "F.HRN 23.7",
+        "Description": "Flutter Horn Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5176,6 +5360,7 @@ function_data = [
     },
     {
         "Voice": "HORNS 23.8",
+        "Description": "Horn Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5204,6 +5389,7 @@ function_data = [
     },
     {
         "Voice": "AFMAL 24.1",
+        "Description": "African Mallets 1",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -5232,6 +5418,7 @@ function_data = [
     },
     {
         "Voice": "AFMAL 24.2",
+        "Description": "African Mallets 2",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -5260,6 +5447,7 @@ function_data = [
     },
     {
         "Voice": "P.ICE 25.1",
+        "Description": "Planet of Ice 1 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5288,6 +5476,7 @@ function_data = [
     },
     {
         "Voice": "P.ICE 25.2",
+        "Description": "Planet of Ice 2 Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5316,6 +5505,7 @@ function_data = [
     },
     {
         "Voice": "FLCLD 26.1",
+        "Description": "Floating Clouds 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5344,6 +5534,7 @@ function_data = [
     },
     {
         "Voice": "FLCLD 26.2",
+        "Description": "Floating Clouds 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5372,6 +5563,7 @@ function_data = [
     },
     {
         "Voice": "GL.WC.27.1",
+        "Description": "Glass Wind Chimes 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5400,6 +5592,7 @@ function_data = [
     },
     {
         "Voice": "GL.WC.27.2",
+        "Description": "Glass Wind Chimes 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5428,6 +5621,7 @@ function_data = [
     },
     {
         "Voice": "HARPS 28.1",
+        "Description": "Hapsichord Low",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5456,6 +5650,7 @@ function_data = [
     },
     {
         "Voice": "HARPS 28.2",
+        "Description": "Hapsichord High",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5484,6 +5679,7 @@ function_data = [
     },
     {
         "Voice": "CLAV. 29.1",
+        "Description": "Clav. 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5512,6 +5708,7 @@ function_data = [
     },
     {
         "Voice": "CLAV. 29.2",
+        "Description": "Clav. 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5540,6 +5737,7 @@ function_data = [
     },
     {
         "Voice": "VIBES 30.1",
+        "Description": "Vibe 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5568,6 +5766,7 @@ function_data = [
     },
     {
         "Voice": "VIBES 30.2",
+        "Description": "Vibe 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5596,6 +5795,7 @@ function_data = [
     },
     {
         "Voice": "DB.HP.31.1",
+        "Description": "Double Harp 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5624,6 +5824,7 @@ function_data = [
     },
     {
         "Voice": "DB.HP.31.2",
+        "Description": "Double Harp 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5652,6 +5853,7 @@ function_data = [
     },
     {
         "Voice": "BLTRE 32.1",
+        "Description": "Bell Tree 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5680,6 +5882,7 @@ function_data = [
     },
     {
         "Voice": "BLTRE 32.2",
+        "Description": "Bell Tree 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5708,6 +5911,7 @@ function_data = [
     },
     {
         "Voice": "OBOBC 24.3",
+        "Description": "Breath Control Oboe Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -5736,6 +5940,7 @@ function_data = [
     },
     {
         "Voice": "BCBSN 24.4",
+        "Description": "Breath Control Basssoon Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -5764,6 +5969,7 @@ function_data = [
     },
     {
         "Voice": "BCCLA 24.5",
+        "Description": "Breath Control Clarinet Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -5792,6 +5998,7 @@ function_data = [
     },
     {
         "Voice": "FLUTE 24.6",
+        "Description": "Breath Control Flute Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -5820,6 +6027,7 @@ function_data = [
     },
     {
         "Voice": "RECDR 25.3",
+        "Description": "Recorder",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5848,6 +6056,7 @@ function_data = [
     },
     {
         "Voice": "NOSTN 25.4",
+        "Description": "Nose Tone",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5876,6 +6085,7 @@ function_data = [
     },
     {
         "Voice": "BCSAX 25.5",
+        "Description": "Breath Control Sax Breath Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5904,6 +6114,7 @@ function_data = [
     },
     {
         "Voice": "H.SYN 25.6",
+        "Description": "Huff Synth",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5932,6 +6143,7 @@ function_data = [
     },
     {
         "Voice": "BANJO 26.3",
+        "Description": "Banjo",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5960,6 +6172,7 @@ function_data = [
     },
     {
         "Voice": "FIDLE 26.4",
+        "Description": "Fiddle",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -5988,6 +6201,7 @@ function_data = [
     },
     {
         "Voice": "J.GTR 26.5",
+        "Description": "Jazz Guitar",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6016,6 +6230,7 @@ function_data = [
     },
     {
         "Voice": "O.SPH 26.6",
+        "Description": "Old Spanish",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6044,6 +6259,7 @@ function_data = [
     },
     {
         "Voice": "MGORG 27.3",
+        "Description": "Magic Organ Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6072,6 +6288,7 @@ function_data = [
     },
     {
         "Voice": "DMBEL 27.4",
+        "Description": "Dream Bell",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6100,6 +6317,7 @@ function_data = [
     },
     {
         "Voice": "STGTR 27.5",
+        "Description": "Electric Guitar",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6128,6 +6346,7 @@ function_data = [
     },
     {
         "Voice": "Y.BNK 27.6",
+        "Description": "Yes Bunk",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6156,6 +6375,7 @@ function_data = [
     },
     {
         "Voice": "KOTO  28.3",
+        "Description": "Koto",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6184,6 +6404,7 @@ function_data = [
     },
     {
         "Voice": "SITAR 28.4",
+        "Description": "Sitar",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6212,6 +6433,7 @@ function_data = [
     },
     {
         "Voice": "H.SYN 28.5",
+        "Description": "Harmosynth",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6240,6 +6462,7 @@ function_data = [
     },
     {
         "Voice": "ST DM 28.6",
+        "Description": "Steel Drums",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6268,6 +6491,7 @@ function_data = [
     },
     {
         "Voice": "SMOOH 29.3",
+        "Description": "Smooth Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6296,6 +6520,7 @@ function_data = [
     },
     {
         "Voice": "P.STG 29.4",
+        "Description": "Pizzicato Strings",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6324,6 +6549,7 @@ function_data = [
     },
     {
         "Voice": "PDSTL 29.5",
+        "Description": "Pedal Steel Foot Controller",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6352,6 +6578,7 @@ function_data = [
     },
     {
         "Voice": "G.PIP 29.6",
+        "Description": "Gas Pipe",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6380,6 +6607,7 @@ function_data = [
     },
     {
         "Voice": "OCEAN 30.3",
+        "Description": "Ocean",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6408,6 +6636,7 @@ function_data = [
     },
     {
         "Voice": "SMASH 30.4",
+        "Description": "Smash!",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6436,6 +6665,7 @@ function_data = [
     },
     {
         "Voice": "A.FCE 30.5",
+        "Description": "Air Farce",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6464,6 +6694,7 @@ function_data = [
     },
     {
         "Voice": "BIRD  30.6",
+        "Description": "Birds",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6492,6 +6723,7 @@ function_data = [
     },
     {
         "Voice": "CLSTE 31.3",
+        "Description": "Celeste",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6520,6 +6752,7 @@ function_data = [
     },
     {
         "Voice": "GLOCK 31.4",
+        "Description": "Glockenspiel",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6548,6 +6781,7 @@ function_data = [
     },
     {
         "Voice": "GONG  31.5",
+        "Description": "Gongs",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6576,6 +6810,7 @@ function_data = [
     },
     {
         "Voice": "RFWSL 31.6",
+        "Description": "Referee's Whistle",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6604,6 +6839,7 @@ function_data = [
     },
     {
         "Voice": "TDBLS 32.3",
+        "Description": "Tuned Bells",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6632,6 +6868,7 @@ function_data = [
     },
     {
         "Voice": "ANLNG 32.4",
+        "Description": "Anchlung",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6660,6 +6897,7 @@ function_data = [
     },
     {
         "Voice": "NCLAV 32.5",
+        "Description": "Knock Clav",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6688,6 +6926,7 @@ function_data = [
     },
     {
         "Voice": "B.BEN 32.6",
+        "Description": "Big Ben",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6716,6 +6955,7 @@ function_data = [
     },
     {
         "Voice": "D.BAS 24.7",
+        "Description": "Double Bass",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -6744,6 +6984,7 @@ function_data = [
     },
     {
         "Voice": "H.BAS 25.7",
+        "Description": "Harmonic Bass",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6772,6 +7013,7 @@ function_data = [
     },
     {
         "Voice": "F.BAS 26.7",
+        "Description": "Funk Bass 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6800,6 +7042,7 @@ function_data = [
     },
     {
         "Voice": "S.BAS 27.7",
+        "Description": "Smooth Harmonic Bass 1",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6828,6 +7071,7 @@ function_data = [
     },
     {
         "Voice": "WDBSS 28.7",
+        "Description": "Wood Bass",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6856,6 +7100,7 @@ function_data = [
     },
     {
         "Voice": "SMBSS 29.7",
+        "Description": "Smooth Bass 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6884,6 +7129,7 @@ function_data = [
     },
     {
         "Voice": "F.BSS 30.7",
+        "Description": "Funk Bass 2",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6912,6 +7158,7 @@ function_data = [
     },
     {
         "Voice": "F.BSS 31.7",
+        "Description": "Funk Bass 3",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6940,6 +7187,7 @@ function_data = [
     },
     {
         "Voice": "S.BSS 32.7",
+        "Description": "Smooth Bass 3",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -6968,6 +7216,7 @@ function_data = [
     },
     {
         "Voice": "MBLOK 24.8",
+        "Description": "Metal Blocks",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",
@@ -6996,6 +7245,7 @@ function_data = [
     },
     {
         "Voice": "SYNDM 25.8",
+        "Description": "Synth Drums",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -7024,6 +7274,7 @@ function_data = [
     },
     {
         "Voice": "TMB   26.8",
+        "Description": "Timbales",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -7052,6 +7303,7 @@ function_data = [
     },
     {
         "Voice": "SKLS  27.8",
+        "Description": "Skulls",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -7080,6 +7332,7 @@ function_data = [
     },
     {
         "Voice": "QKR   28.8",
+        "Description": "Queker",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -7108,6 +7361,7 @@ function_data = [
     },
     {
         "Voice": "CSTNT 29.8",
+        "Description": "Castanets",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -7136,6 +7390,7 @@ function_data = [
     },
     {
         "Voice": "TMBRN 30.8",
+        "Description": "Tambourine",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -7164,6 +7419,7 @@ function_data = [
     },
     {
         "Voice": "HDRUM 31.8",
+        "Description": "Hand Drums",
         "POLY/MONO": "POLY",
         "mode": "retai",
         "gliss": "0",
@@ -7192,6 +7448,7 @@ function_data = [
     },
     {
         "Voice": "TRIGL 32.8",
+        "Description": "Triangle",
         "POLY/MONO": "POLY",
         "mode": "follo",
         "gliss": "0",

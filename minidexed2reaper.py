@@ -258,7 +258,7 @@ def main():
         # This line contains multiple fields, each separated by '"' characters
         fields = rpp.lines[container_line_number].strip().split('"')
         # Replace the value of the second field with "TGx" and the voice name
-        fields[1] = "TG" + str(tg_number+1) + " " + voice["Voice"] # TODO: Use description
+        fields[1] = "TG" + str(tg_number+1) + ": " + voice["Description"]
         # Replace the line with the modified line
         rpp.lines[container_line_number] = ' ' * indent + '"'.join(fields)
         # print(rpp.lines[container_line_number])
