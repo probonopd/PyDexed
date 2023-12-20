@@ -90,7 +90,7 @@ def print_blobs(plugin_instance):
     print("Preset name from blob 3: " + preset_name)
 
 def main():
-    rpp = ReaperProject(os.path.dirname(__file__) + '/patchedtest.rpp')
+    rpp = ReaperProject(os.path.dirname(__file__) + '/reaper.rpp')
     rpp.read()
     initial_number_of_lines = len(rpp.lines)
 
