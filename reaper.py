@@ -27,6 +27,13 @@ class PluginInstance:
         blob1 = ''.join(self.lines[self.begin_line_number + 2:self.end_line_number-1]).strip().replace(' ', '')
         blob2 = self.lines[self.end_line_number-1].strip()
 
+        self.raw_blobs = [blob0, blob1, blob2]
+
+        # Add padding to the blobs so that they are a multiple of 4 bytes long
+        blob0 += '=' * (4 - len(blob0) % 4)
+        blob1 += '=' * (4 - len(blob1) % 4)
+        blob2 += '=' * (4 - len(blob2) % 4)
+
         # Decode the blobs using base64
         decoded_blob0 = base64.b64decode(blob0)
         decoded_blob1 = base64.b64decode(blob1)
@@ -83,7 +90,7 @@ def print_blobs(plugin_instance):
     print("Preset name from blob 3: " + preset_name)
 
 def main():
-    rpp = ReaperProject(os.path.dirname(__file__) + '/reaper.rpp')
+    rpp = ReaperProject(os.path.dirname(__file__) + '/patchedtest.rpp')
     rpp.read()
     initial_number_of_lines = len(rpp.lines)
 

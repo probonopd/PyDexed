@@ -251,7 +251,7 @@ def main():
 
         # Find the numbers of all lines that contain "<CONTAINER Container" after whitespace
         # (these are the lines that contain the track names for the Dexed instances)
-        container_line_number = [i for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<CONTAINER Container')][dexed_instance_number]
+        container_line_number = [i for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<CONTAINER Container ')][dexed_instance_number]
         # print(rpp.lines[container_line_number])
         # Get the number of leading spaces in the line
         indent = len(rpp.lines[container_line_number]) - len(rpp.lines[container_line_number].lstrip())
@@ -279,12 +279,15 @@ def main():
             indentation = len(line) - len(line.lstrip())
             rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'FLOATPOS 0 0 0 0')
 
-    # Make the first item the selected item each in FX window and container
+    # Make the first item the selected item each in FX window and the second (Dexed) in the each container
     # Find all lines that contain "LASTSEL " after whitespace and set them to "LASTSEL 1"
     for line in rpp.lines:
         if line.lstrip().startswith('LASTSEL '):
             indentation = len(line) - len(line.lstrip())
-            rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'LASTSEL 1')
+            if indentation == 8:
+                rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'LASTSEL 1')
+            else:
+                rpp.lines[rpp.lines.index(line)] = line.replace(line, ' ' * indentation + 'LASTSEL 0')
 
     # Unmute and unsolo all tracks
     # Find all lines that start with "MUTESOLO" after whitespace and set them to "MUTESOLO 0 0 0"
