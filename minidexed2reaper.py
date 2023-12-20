@@ -306,13 +306,45 @@ def main():
     assert len(rpp.lines) == initial_number_of_lines
     rpp.write('tx816.rpp')
 
-    # Zip the project file
+    # Now, make a version that has the Foot Controller set to 0 for all voices and the Breath Controller set to 0 for all voices
+
+    dexed_instance_number = 0
+    for plugin_instance in rpp.find_plugin_instances("Dexed"):
+        DS = dexed.DexedState()
+        DS.parse_data_blob(plugin_instance.blobs[1])
+
+        DS.dexed_state_dict['dexedState']['@footMod'] = "0 0 0 0"
+        DS.dexed_state_dict['dexedState']['@breathMod'] = "0 0 0 0"
+
+        # In the names of the plugin instances, replace the "Foot Controller" and "Breath Controller" parts with "(FC Off)" and "(BC Off)"
+        # Find the numbers of all lines that contain "<CONTAINER Container" after whitespace
+        # (these are the lines that contain the track names for the Dexed instances)
+        container_line_number = [i for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<CONTAINER Container ')][dexed_instance_number]
+        # print(rpp.lines[container_line_number])
+        # Get the number of leading spaces in the line
+        indent = len(rpp.lines[container_line_number]) - len(rpp.lines[container_line_number].lstrip())
+        # This line contains multiple fields, each separated by '"' characters
+        fields = rpp.lines[container_line_number].strip().split('"')
+        # Replace the value of the second field with "TGx" and the voice name
+        fields[1] = fields[1].replace("Foot Controller", "(FC Off)").replace("Breath Controller", "(BC Off)")
+        # Replace the line with the modified line
+        rpp.lines[container_line_number] = ' ' * indent + '"'.join(fields)
+        # print(rpp.lines[container_line_number])
+
+        plugin_instance.update_blob(1, (DS.get_data_blob()))
+
+        dexed_instance_number += 1
+
+    rpp.write('tx816_foot_breath_off.rpp')
+
+    # Zip the project files
     with zipfile.ZipFile('tx816.zip', 'w', zipfile.ZIP_DEFLATED) as zip:
         zip.write('tx816.rpp')
+        zip.write('tx816_foot_breath_off.rpp')
+
+    print(os.path.abspath('tx816.zip'))
 
     print("Done.")
-    print(os.path.abspath('tx816.rpp'))
-    print(os.path.abspath('tx816.zip'))
 
 if __name__ == "__main__":
     main()
