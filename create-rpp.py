@@ -106,6 +106,7 @@ def get_sysex_program_number(i):
 i = 0
 j = 0
 n = 0
+voice_names = []
 for instance in dexed_instances:
     DS = get_dexed_state(instance)
 
@@ -139,6 +140,7 @@ for instance in dexed_instances:
 
     sysex, vced, voice_number = get_sysex_program_number(voice)
     print("Voice name:", dx7.get_voice_name(vced))
+    voice_names.append(dx7.get_voice_name(vced))
 
     # Set the currently selected program
     DS.set_program(vced)
@@ -161,7 +163,37 @@ for instance in dexed_instances:
         i = 0
     if j == 32:
         j = 0
-        
+
+# From both performance files, get the performance names
+performance_names = []
+performance_filenames = ["DX7IIFDPerf.SYX", "DX7IIFDPerfB.SYX"]
+for performance_filename in performance_filenames:
+    PS = dx7II.PerformanceSyx(performance_filename)
+    for i in range(32):
+        performance_names.append(PS.pceds[i].pnam)
+assert len(performance_names) == 64
+assert len(voice_names) == 128
+
+# Find all TRACK tags and set the names of the tracks
+tracks = r.findall('.//TRACK')
+print("Number of tracks:", len(tracks))
+assert len(tracks) == 64
+i_track = 0
+for track in tracks:
+    # Set the name of the tracks
+    track.children[0] = "NAME", performance_names[i_track].strip() # FIXME: Is there a cleaner way to do this?
+    i_track += 1
+
+# Find all CONTAINER tags
+containers = r.findall('.//CONTAINER')
+print("Number of containers:", len(containers))
+assert len(containers) == 128
+i_container = 0
+for container in containers:
+    # Set the name of the container (name is the 2nd property)
+    container.attrib[1] = voice_names[i_container]
+    i_container += 1
+
 # Write the modified project file
 with open("dx7IId_modified.rpp", "w") as f:
     f.write(rpp.dumps(r))
