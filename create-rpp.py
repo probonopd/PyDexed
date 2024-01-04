@@ -3,7 +3,7 @@
 # pip install --upgrade attrs ply
 
 # Add the rppgit subdirectory to the path
-import sys, base64
+import sys, base64, math
 
 sys.path.append("rppgit") # Rename rpp git directory so it doesn't conflict with the rpp module
 
@@ -21,13 +21,28 @@ with open("dx7IId.rpp", "r") as f:
 # Create a new project
 r = rpp.loads(s)
 
-all_vsts = r.findall('.//VST') # Find all VST tags; TODO: Limit to Dexed VSTs
-
 # Find all Dexed instances
+all_vsts = r.findall('.//VST') # Find all VST tags; TODO: Limit to Dexed VSTs
 dexed_instances = []
 for instance in all_vsts:
     if instance.attrib[1] == "Dexed.vst3":
         dexed_instances.append(instance)
+assert len(dexed_instances) == 128
+
+# Find all "midi/midi_note_filter" JS tags
+all_jss = r.findall('.//JS') # Find all JS tags
+midi_note_filters = []
+for js in all_jss:
+    if js.attrib[0] == "midi/midi_note_filter":
+        midi_note_filters.append(js)
+print(len(midi_note_filters))
+assert len(midi_note_filters) == 128
+
+# Find all "utility/volume_pan" JS tags
+volume_pans = []
+for js in all_jss:
+    if js.attrib[0] == "utility/volume_pan":
+        volume_pans.append(js)
 
 import reaper
 import dexed
@@ -107,6 +122,8 @@ i = 0
 j = 0
 n = 0
 voice_names = []
+detuned_performance_names = []
+
 for instance in dexed_instances:
     DS = get_dexed_state(instance)
 
@@ -114,7 +131,6 @@ for instance in dexed_instances:
 
 
     # Read a PCED from a file
-    performance_filename = "DX7IIFDPerf.SYX"
     if n < 64:
         performance_filename = "DX7IIFDPerf.SYX"
     else:
@@ -123,24 +139,72 @@ for instance in dexed_instances:
 
     print("Performance:", PS.pceds[j].pnam)
     print("i:", i, "j:", j, "n:", n)
-    voice = 0
+    voice_nr = 0
     if n_is_uneven:
         print("Voice B:", PS.pceds[j].vnmb)
-        voice = PS.pceds[j].vnmb
+        voice_nr = PS.pceds[j].vnmb
     else:
         print("Voice A:", PS.pceds[j].vnma)
-        voice = PS.pceds[j].vnma
+        voice_nr = PS.pceds[j].vnma
 
-    if PS.pceds[i].plmd == 0:
+    split_point = PS.pceds[j].sppt
+    print("Split point:", split_point)
+
+    # Decibel reduction for dual and split modes to prevent clipping
+    number_of_voices = 2
+    reduction = 20 * math.log10(1 / math.sqrt(number_of_voices))
+    reduction = round(reduction, 1)
+
+    if PS.pceds[j].plmd == 0:
         print("Mode: Poly")
-    elif PS.pceds[i].plmd == 1:
+        midi_note_filters[n].children[0][0] = "0"
+        midi_note_filters[n].children[0][1] = "127"
+        volume_pans[n].children[0][0] = str(reduction)
+    elif PS.pceds[j].plmd == 1:
         print("Mode: Dual")
-    elif PS.pceds[i].plmd == 2:
+        midi_note_filters[n].children[0][0] = "0"
+        midi_note_filters[n].children[0][1] = "127"
+        volume_pans[n].children[0][0] = str(reduction)
+    elif PS.pceds[j].plmd == 2:
         print("Mode: Split")
+        if n_is_uneven:
+            midi_note_filters[n].children[0][0] = str(split_point)
+            midi_note_filters[n].children[0][1] = "127"
+        else:
+            midi_note_filters[n].children[0][0] = "0"
+            midi_note_filters[n].children[0][1] = str(split_point -1)
+        volume_pans[n].children[0][0] = "-0.0" # No reduction since only one voice is active at a time due to the split point
 
-    sysex, vced, voice_number = get_sysex_program_number(voice)
-    print("Voice name:", dx7.get_voice_name(vced))
-    voice_names.append(dx7.get_voice_name(vced))
+    ###
+    # TODO: Figure out how this stuff works
+    volume_balance = PS.pceds[j].blnc
+    print("Volume balance:", volume_balance)
+    pan_mode = PS.pceds[j].pnmd
+    print("Pan mode:", pan_mode)
+    pan_control_range = PS.pceds[j].panrng
+    print("Pan control range:", pan_control_range)
+    ###
+
+    # Detune
+    dual_detune = PS.pceds[j].ddtn
+    if dual_detune != 0:
+        detuned_performance_names.append(PS.pceds[j].pnam)
+    print("Dual detune:", dual_detune)
+    # Convert detune value to what Dexed masterTune expects: -1398101 .. 1398101 # TODO: Check whether this is correct; why 1398101?
+    # This amount is likely far too much. We need to find out how Dexed converts the detune value to cents.
+    converted_detune = int(dual_detune) / 7 * 1398101
+    if n_is_uneven:
+        DS.dexed_state_dict['dexedState']['@masterTune'] = str(converted_detune)
+    else:
+        DS.dexed_state_dict['dexedState']['@masterTune'] = "-" + str(converted_detune)
+
+    print(midi_note_filters[n].children[0])
+    print(volume_pans[n].children[0])
+
+    sysex, vced, voice_number = get_sysex_program_number(voice_nr)
+    voice_name = dx7.get_voice_name(vced)
+    print("Voice name:", voice_name)
+    voice_names.append(voice_name)
 
     # Set the currently selected program
     DS.set_program(vced)
@@ -174,6 +238,16 @@ for performance_filename in performance_filenames:
 assert len(performance_names) == 64
 assert len(voice_names) == 128
 
+# Find all CONTAINER tags and set the names of the containers
+containers = r.findall('.//CONTAINER')
+print("Number of containers:", len(containers))
+assert len(containers) == 128
+i_container = 0
+for container in containers:
+    # Set the name of the container (name is the 2nd property)
+    container.attrib[1] = voice_names[i_container]
+    i_container += 1
+
 # Find all TRACK tags and set the names of the tracks
 tracks = r.findall('.//TRACK')
 print("Number of tracks:", len(tracks))
@@ -184,16 +258,10 @@ for track in tracks:
     track.children[0] = "NAME", performance_names[i_track].strip() # FIXME: Is there a cleaner way to do this?
     i_track += 1
 
-# Find all CONTAINER tags
-containers = r.findall('.//CONTAINER')
-print("Number of containers:", len(containers))
-assert len(containers) == 128
-i_container = 0
-for container in containers:
-    # Set the name of the container (name is the 2nd property)
-    container.attrib[1] = voice_names[i_container]
-    i_container += 1
-
 # Write the modified project file
 with open("dx7IId_modified.rpp", "w") as f:
     f.write(rpp.dumps(r))
+
+print("Detuned performances:")
+for detuned_performance_name in detuned_performance_names:
+    print(detuned_performance_name)
