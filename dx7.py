@@ -156,6 +156,13 @@ def get_voice_name(vced):
     assert len(name) == 10
     return name
 
+# Load a VCED from a file containing 32 voices (e.g. a sysex file)
+def load_vced_from_file(path, voice_number):
+    with open(path, 'rb') as f:
+        sysex = f.read()
+    vced = get_vced_from_bank_sysex(sysex, voice_number)
+    return vced
+
 def main():
     print("Size of the init voice VCED:", len(init_vced))
 

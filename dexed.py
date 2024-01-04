@@ -128,6 +128,16 @@ class DexedState:
 
         self.dexed_state_dict = dexed_state_dict
 
+    def set_program(self, vced):
+        assert len(vced) == 155
+        vced_hex = ' '.join([hex(b)[2:].zfill(2).upper() for b in vced])
+        self.dexed_state_dict['dexedState']['dexedBlob']['@program'] = vced_hex
+
+    def set_sysex(self, sysex):
+        assert len(sysex) == 4104
+        sysex_hex = ' '.join([hex(b)[2:].zfill(2).upper() for b in sysex])
+        self.dexed_state_dict['dexedState']['dexedBlob']['@sysex'] = sysex_hex
+
     def construct_dexed_xml(self):
         """
         Constructs a Dexed XML from a Dexed state dictionary.
@@ -141,23 +151,27 @@ class DexedState:
 
         dexed_state_dict = self.dexed_state_dict
 
-        # Get the encoded sysex from the dictionary
-        decoded_sysex = dexed_state_dict['dexedState']['dexedBlob']['@sysex']
+        if '@sysex' in dexed_state_dict['dexedState']['dexedBlob']:
 
-        # Encode the sysex
-        encoded_sysex = codec.toJuceBase64Encoding(bytearray.fromhex(decoded_sysex.replace(' ', '')))
+            # Get the encoded sysex from the dictionary
+            decoded_sysex = dexed_state_dict['dexedState']['dexedBlob']['@sysex']
 
-        # In the dictionary, replace the decoded sysex with the encoded sysex
-        dexed_state_dict['dexedState']['dexedBlob']['@sysex'] = encoded_sysex
+            # Encode the sysex
+            encoded_sysex = codec.toJuceBase64Encoding(bytearray.fromhex(decoded_sysex.replace(' ', '')))
 
-        # Get the encoded program from the dictionary
-        decoded_program = dexed_state_dict['dexedState']['dexedBlob']['@program']
+            # In the dictionary, replace the decoded sysex with the encoded sysex
+            dexed_state_dict['dexedState']['dexedBlob']['@sysex'] = encoded_sysex
 
-        # Encode the program
-        encoded_program = codec.toJuceBase64Encoding(bytearray.fromhex(decoded_program.replace(' ', '')))
+        if '@program' in dexed_state_dict['dexedState']['dexedBlob']:
 
-        # In the dictionary, replace the decoded program with the encoded program
-        dexed_state_dict['dexedState']['dexedBlob']['@program'] = encoded_program
+            # Get the encoded program from the dictionary
+            decoded_program = dexed_state_dict['dexedState']['dexedBlob']['@program']
+
+            # Encode the program
+            encoded_program = codec.toJuceBase64Encoding(bytearray.fromhex(decoded_program.replace(' ', '')))
+
+            # In the dictionary, replace the decoded program with the encoded program
+            dexed_state_dict['dexedState']['dexedBlob']['@program'] = encoded_program
 
         # Convert the dictionary to XML
         xml = xmltodict.unparse(dexed_state_dict, pretty=False).replace('sysex', 'base64:sysex').replace('program', 'base64:program').replace('\n', ' ')

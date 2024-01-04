@@ -59,8 +59,11 @@ class ReaperProject:
         self.lines = []
 
     def read(self):
+        # Check if the file exists
+        if not os.path.isfile(self.path):
+            raise FileNotFoundError("File not found: " + self.path)
         # Read reaper.rpp project file
-        with open(self.path, 'r') as f:
+        with open(self.path, 'r', encoding='utf-8', errors='ignore') as f:
             data = f.read()
 
         self.lines = data.splitlines()
