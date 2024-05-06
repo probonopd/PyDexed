@@ -3,7 +3,7 @@
 # pip install --upgrade attrs ply
 
 # Add the rppgit subdirectory to the path
-import sys, os, base64, math, zipfile
+import sys, os, base64, math, zipfile, time
 import urllib.request
 
 # If directory "rppgit" does not exist, clone the "rpp" git repository
@@ -60,6 +60,8 @@ zip_file_path = 'DX7IIfd.ROM1A.zip'
 with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
     for file_info in zip_ref.infolist():
         zip_ref.extract(file_info)
+
+time.sleep(5) # FIXME: Remove need for this
 
 print(os.system("ls -lh"))
 
