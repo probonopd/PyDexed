@@ -1,4 +1,4 @@
 inifile==0.4.1
 xmltodict==0.13.0
-attrs
-ply
+attrs==23.2.0
+ply==3.11
