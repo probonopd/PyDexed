@@ -19,9 +19,22 @@ import dx7II
 
 print(dir(rpp))
 
+# Check if the file tx816_structure.zip exists
+if not os.path.isfile("dx7IId_structure.zip"):
+    # Download the tx816_structure.zip file from GitHub
+    print("Downloading dx7IId_structure.zip...")
+    urllib.request.urlretrieve("https://github.com/probonopd/PyDexed/releases/download/input/dx7IId_structure.zip", "dx7IId_structure.zip")
+    print("Download complete.")
+
+# Unzip the dx7IId_structure.rpp file from dx7IId_structure.zip
+with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
+    filename = "dx7IId_structure.rpp"
+    zip.extract(filename)
+
 # Load dx7IId.rpp into a string
-with open("dx7IId.rpp", "r") as f:
+with open("dx7IId_structure.rpp", "r") as f:
     s = f.read()
+os.remove('dx7IId_structure.rpp')
 
 # Create a new project
 r = rpp.loads(s)
