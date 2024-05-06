@@ -35,7 +35,7 @@ if not os.path.isfile("Dexed_cart_1.0.zip"):
     print("Download complete.")
 
 # Check if the file DX7IIfd.ROM1A.zip exists
-if not os.path.isfile(DX7IIfd.ROM1A.zip"):
+if not os.path.isfile("DX7IIfd.ROM1A.zip"):
     # Download the Dexed_cart_1.0.zip file
     print("Downloading DX7IIfd.ROM1A.zip...")
     urllib.request.urlretrieve("https://github.com/probonopd/PyDexed/releases/download/input/DX7IIfd.ROM1A.zip", "DX7IIfd.ROM1A.zip") # Mirrored from https://github.com/asb2m10/dexed/issues/165#issuecomment-1436586010
