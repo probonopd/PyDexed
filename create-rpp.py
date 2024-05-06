@@ -28,7 +28,7 @@ if not os.path.isfile("dx7IId_structure.zip"):
     print("Download complete.")
 
 # Check if the file Dexed_cart_1.0.zip exists
-if not os.path.isfile(Dexed_cart_1.0.zip"):
+if not os.path.isfile("Dexed_cart_1.0.zip"):
     # Download the Dexed_cart_1.0.zip file
     print("Downloading dx7IId_structure.zip...")
     urllib.request.urlretrieve("http://hsjp.eu/downloads/Dexed/Dexed_cart_1.0.zip", "Dexed_cart_1.0.zip")
