@@ -3,7 +3,7 @@
 # pip install --upgrade attrs ply
 
 # Add the rppgit subdirectory to the path
-import sys, os, base64, math
+import sys, os, base64, math, zipfile
 import urllib.request
 
 # If directory "rppgit" does not exist, clone the "rpp" git repository
