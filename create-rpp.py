@@ -51,7 +51,9 @@ zip_file_path = 'Dexed_cart_1.0.zip'
 extract_directory = 'Dexed_cart_1.0/Original Yamaha/DX7IIFD'
 with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
     for file_info in zip_ref.infolist():
+        print(file_info)
         if file_info.filename.startswith(extract_directory):
+            print("Extracting %s" % file_info)
             zip_ref.extract(file_info, path=os.getcwd())
 
 # Unzip DX7IIfd.ROM1A.zip
