@@ -31,7 +31,7 @@ if not os.path.isfile("dx7IId_structure.zip"):
 if not os.path.isfile("Dexed_cart_1.0.zip"):
     # Download the Dexed_cart_1.0.zip file
     print("Downloading Dexed_cart_1.0.zip...")
-    urllib.request.urlretrieve("http://hsjp.eu/downloads/Dexed/Dexed_cart_1.0.zip", "Dexed_cart_1.0.zip")
+    urllib.request.urlretrieve("https://github.com/probonopd/PyDexed/releases/download/input/Dexed_cart_1.0.zip", "Dexed_cart_1.0.zip")  # Mirrored from http://hsjp.eu/downloads/Dexed/Dexed_cart_1.0.zip
     print("Download complete.")
 
 # Check if the file DX7IIfd.ROM1A.zip exists
@@ -45,7 +45,6 @@ if not os.path.isfile("DX7IIfd.ROM1A.zip"):
 with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
     filename = "dx7IId_structure.rpp"
     zip.extract(filename)
-print(os.system("ls -lh"))
 
 # Unzip Dexed_cart_1.0.zip
 zip_file_path = 'Dexed_cart_1.0.zip'
@@ -54,13 +53,15 @@ with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
     for file_info in zip_ref.infolist():
         if file_info.filename.startswith(extract_directory):
             print("Extracting %s" % file_info)
-            zip_ref.extract(file_info, path=os.getcwd())
+            zip_ref.extract(file_info)
 
 # Unzip DX7IIfd.ROM1A.zip
 zip_file_path = 'DX7IIfd.ROM1A.zip'
 with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
     for file_info in zip_ref.infolist():
-        zip_ref.extract(file_info, path=os.getcwd())
+        zip_ref.extract(file_info)
+
+print(os.system("ls -lh"))
 
 # Load dx7IId.rpp into a string
 with open("dx7IId_structure.rpp", "r") as f:
