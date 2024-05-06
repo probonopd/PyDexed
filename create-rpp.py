@@ -45,7 +45,7 @@ if not os.path.isfile("DX7IIfd.ROM1A.zip"):
 with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
     filename = "dx7IId_structure.rpp"
     zip.extract(filename)
-print(os.system(ls -lh))
+print(os.system("ls -lh"))
 
 # Unzip Dexed_cart_1.0.zip
 zip_file_path = 'Dexed_cart_1.0.zip'
