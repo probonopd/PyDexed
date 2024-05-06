@@ -27,11 +27,26 @@ if not os.path.isfile("dx7IId_structure.zip"):
     urllib.request.urlretrieve("https://github.com/probonopd/PyDexed/releases/download/input/dx7IId_structure.zip", "dx7IId_structure.zip")
     print("Download complete.")
 
+# Check if the file Dexed_cart_1.0.zip exists
+if not os.path.isfile(Dexed_cart_1.0.zip"):
+    # Download the Dexed_cart_1.0.zip file
+    print("Downloading dx7IId_structure.zip...")
+    urllib.request.urlretrieve("http://hsjp.eu/downloads/Dexed/Dexed_cart_1.0.zip", "Dexed_cart_1.0.zip")
+    print("Download complete.")
+    
 # Unzip the dx7IId_structure.rpp file from dx7IId_structure.zip
 with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
     filename = "dx7IId_structure.rpp"
     zip.extract(filename)
 
+# Unzip Dexed_cart_1.0.zip
+zip_file_path = 'Dexed_cart_1.0.zip'
+extract_directory = 'Dexed_cart_1.0/Original Yamaha/DX7IIFD'
+with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+    for file_info in zip_ref.infolist():
+        if file_info.filename.startswith(extract_directory):
+            zip_ref.extract(file_info, path=os.getcwd())
+            
 # Load dx7IId.rpp into a string
 with open("dx7IId_structure.rpp", "r") as f:
     s = f.read()
