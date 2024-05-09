@@ -36,7 +36,9 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: tx816
-        path: ./tx816.rpp
+        path: |
+            - ./tx816.rpp
+            - ./dx7IId_modified.rpp
     - name: Upload to GitHub Releases (only when building from main branch)
       if: ${{ github.ref == 'refs/heads/main' }}
       run: |
