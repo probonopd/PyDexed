@@ -44,5 +44,5 @@ jobs:
       run: |
            set -ex
            wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-           bash ./upload.sh ./tx816.zip
+           bash ./upload.sh ./tx816.zip ./dx7IId.zip
            
