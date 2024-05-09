@@ -445,5 +445,11 @@ print("Detuned performances:")
 for detuned_performance_name in detuned_performance_names:
     print(detuned_performance_name)
 
+# Zip the project files
+with zipfile.ZipFile('dx7IId.zip', 'w', zipfile.ZIP_DEFLATED) as zip:
+    zip.write('dx7IId_modified')
+
+print(os.path.abspath('tx816.zip'))
+
 # FIXME
 # Tubular Bell Wah (Dual, Detuned): BellWahhA does not find its voice (uses "Say Again") - is this for all "Dual, Detuned" performances?
