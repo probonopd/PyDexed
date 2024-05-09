@@ -3,25 +3,79 @@
 # pip install --upgrade attrs ply
 
 # Add the rppgit subdirectory to the path
-import sys, os, base64, math
+import sys, os, base64, math, zipfile, time, shutil
+import urllib.request
 
 # If directory "rppgit" does not exist, clone the "rpp" git repository
 # but rename rpp git directory "rppgit" so it doesn't conflict with the "rpp" module
 if not os.path.isdir("rppgit"):
     os.system("git clone https://github.com/Perlence/rpp rppgit")
 
-sys.path.append("rppgit")
+sys.path.append(os.path.dirname(__file__) + "/rppgit")
 
 # Load the rpp module from the rpp subdirectory; DO NOT load rpp from the current directory
 import rpp
+print(dir(rpp))
+
 import dx7
 import dx7II
 
-print(dir(rpp))
+
+# Check if the file tx816_structure.zip exists
+if not os.path.isfile("dx7IId_structure.zip"):
+    # Download the tx816_structure.zip file from GitHub
+    print("Downloading dx7IId_structure.zip...")
+    urllib.request.urlretrieve("https://github.com/probonopd/PyDexed/releases/download/input/dx7IId_structure.zip", "dx7IId_structure.zip")
+    print("Download complete.")
+
+# Check if the file Dexed_cart_1.0.zip exists
+if not os.path.isfile("Dexed_cart_1.0.zip"):
+    # Download the Dexed_cart_1.0.zip file
+    print("Downloading Dexed_cart_1.0.zip...")
+    urllib.request.urlretrieve("https://github.com/probonopd/PyDexed/releases/download/input/Dexed_cart_1.0.zip", "Dexed_cart_1.0.zip")  # Mirrored from http://hsjp.eu/downloads/Dexed/Dexed_cart_1.0.zip
+    print("Download complete.")
+
+# Check if the file DX7IIfd.ROM1A.zip exists
+if not os.path.isfile("DX7IIfd.ROM1A.zip"):
+    # Download the Dexed_cart_1.0.zip file
+    print("Downloading DX7IIfd.ROM1A.zip...")
+    urllib.request.urlretrieve("https://github.com/probonopd/PyDexed/releases/download/input/DX7IIfd.ROM1A.zip", "DX7IIfd.ROM1A.zip") # Mirrored from https://github.com/asb2m10/dexed/issues/165#issuecomment-1436586010
+    print("Download complete.")
+    
+# Unzip the dx7IId_structure.rpp file from dx7IId_structure.zip
+with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
+    filename = "dx7IId_structure.rpp"
+    zip.extract(filename)
+
+# Unzip Dexed_cart_1.0.zip
+zip_file_path = 'Dexed_cart_1.0.zip'
+extract_directory = 'Dexed_cart_1.0/Original Yamaha/DX7IIFD'
+with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+    for file_info in zip_ref.infolist():
+        if file_info.filename.startswith(extract_directory):
+            zip_ref.extract(file_info)
+
+# Move Dexed_cart_1.0/Original Yamaha/DX7IIFD/*.SYX to the current directory
+for filename in os.listdir(extract_directory):
+    if filename.endswith(".SYX"):
+        shutil.move(os.path.join(extract_directory, filename), filename)
+# Remove the empty directory
+os.rmdir(extract_directory)
+
+# Unzip DX7IIfd.ROM1A.zip
+zip_file_path = 'DX7IIfd.ROM1A.zip'
+with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+    for file_info in zip_ref.infolist():
+        zip_ref.extract(file_info)
+
+time.sleep(5) # FIXME: Remove need for this
+
+print(os.system("ls -lh"))
 
 # Load dx7IId.rpp into a string
-with open("dx7IId.rpp", "r") as f:
+with open("dx7IId_structure.rpp", "r") as f:
     s = f.read()
+# os.remove('dx7IId_structure.rpp')
 
 # Create a new project
 r = rpp.loads(s)
@@ -296,9 +350,15 @@ for instance in dexed_instances:
         converted_note_shift = note_shift - 24
         voice_name += " (Note Shift " + str(converted_note_shift) + ")"
         print("Additional note shift:", converted_note_shift)
-        midi_routers[n].children[0][5] = str(converted_note_shift) # Additional note shift (in addition to what the voice data already specifies)
+        try:
+            midi_routers[n].children[0][5] = str(converted_note_shift) # Additional note shift (in addition to what the voice data already specifies)
+        except:
+            print("FIXME: No MIDI Router found for voice", n, "in the RPP file")
     else:
-        midi_routers[n].children[0][5] = "0" # No additional note shift
+        try:
+            midi_routers[n].children[0][5] = "0" # No additional note shift
+        except:
+            print("FIXME: No MIDI Router found for voice", n, "in the RPP file")
 
     print("Voice name:", voice_name)
     voice_names.append(voice_name)
@@ -384,3 +444,6 @@ with open("dx7IId_modified.rpp", "w") as f:
 print("Detuned performances:")
 for detuned_performance_name in detuned_performance_names:
     print(detuned_performance_name)
+
+# FIXME
+# Tubular Bell Wah (Dual, Detuned): BellWahhA does not find its voice (uses "Say Again") - is this for all "Dual, Detuned" performances?
