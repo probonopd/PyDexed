@@ -11,12 +11,12 @@ import urllib.request
 if not os.path.isdir("rppgit"):
     os.system("git clone https://github.com/Perlence/rpp rppgit")
 
-sys.path.append("rppgit")
-
-print(dir(rpp))
+sys.path.append(os.path.dirname(__file__) + "/rppgit")
 
 # Load the rpp module from the rpp subdirectory; DO NOT load rpp from the current directory
 import rpp
+print(dir(rpp))
+
 import dx7
 import dx7II
 
