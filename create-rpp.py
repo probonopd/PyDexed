@@ -3,7 +3,7 @@
 # pip install --upgrade attrs ply
 
 # Add the rppgit subdirectory to the path
-import sys, os, base64, math, zipfile, time
+import sys, os, base64, math, zipfile, time, shutil
 import urllib.request
 
 # If directory "rppgit" does not exist, clone the "rpp" git repository
@@ -52,8 +52,14 @@ extract_directory = 'Dexed_cart_1.0/Original Yamaha/DX7IIFD'
 with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
     for file_info in zip_ref.infolist():
         if file_info.filename.startswith(extract_directory):
-            print("Extracting %s" % file_info)
             zip_ref.extract(file_info)
+
+# Move Dexed_cart_1.0/Original Yamaha/DX7IIFD/*.SYX to the current directory
+for filename in os.listdir(extract_directory):
+    if filename.endswith(".SYX"):
+        shutil.move(os.path.join(extract_directory, filename), filename)
+# Remove the empty directory
+os.rmdir(extract_directory)
 
 # Unzip DX7IIfd.ROM1A.zip
 zip_file_path = 'DX7IIfd.ROM1A.zip'
@@ -343,9 +349,15 @@ for instance in dexed_instances:
         converted_note_shift = note_shift - 24
         voice_name += " (Note Shift " + str(converted_note_shift) + ")"
         print("Additional note shift:", converted_note_shift)
-        midi_routers[n].children[0][5] = str(converted_note_shift) # Additional note shift (in addition to what the voice data already specifies)
+        try:
+            midi_routers[n].children[0][5] = str(converted_note_shift) # Additional note shift (in addition to what the voice data already specifies)
+        except:
+            print("FIXME: No MIDI Router found for voice", n, "in the RPP file")
     else:
-        midi_routers[n].children[0][5] = "0" # No additional note shift
+        try:
+            midi_routers[n].children[0][5] = "0" # No additional note shift
+        except:
+            print("FIXME: No MIDI Router found for voice", n, "in the RPP file")
 
     print("Voice name:", voice_name)
     voice_names.append(voice_name)
@@ -431,3 +443,8 @@ with open("dx7IId_modified.rpp", "w") as f:
 print("Detuned performances:")
 for detuned_performance_name in detuned_performance_names:
     print(detuned_performance_name)
+
+# FIXME
+# Tubular Bell Wah (Dual, Detuned): BellWahhA does not find its voice (uses "Say Again") - is this for all "Dual, Detuned" performances?
+# The RPP file is maybe outdated, hence we are missing the additional note shift
+# The RPP file contains a reference to a third-party plugin which should be removed
