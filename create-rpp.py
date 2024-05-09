@@ -447,7 +447,7 @@ for detuned_performance_name in detuned_performance_names:
 
 # Zip the project files
 with zipfile.ZipFile('dx7IId.zip', 'w', zipfile.ZIP_DEFLATED) as zip:
-    zip.write('dx7IId_modified')
+    zip.write('dx7IId_modified.rpp')
 
 print(os.path.abspath('tx816.zip'))
 
