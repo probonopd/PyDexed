@@ -42,9 +42,9 @@ if not os.path.isfile("DX7IIfd.ROM1A.zip"):
     print("Download complete.")
     
 # Unzip the dx7IId_structure.rpp file from dx7IId_structure.zip
-with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
-    filename = "dx7IId_structure.rpp"
-    zip.extract(filename)
+#with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
+#    filename = "dx7IId_structure.rpp"
+#    zip.extract(filename)
 
 # Unzip Dexed_cart_1.0.zip
 zip_file_path = 'Dexed_cart_1.0.zip'
@@ -74,7 +74,7 @@ print(os.system("ls -lh"))
 # Load dx7IId.rpp into a string
 with open("dx7IId_structure.rpp", "r") as f:
     s = f.read()
-os.remove('dx7IId_structure.rpp')
+# os.remove('dx7IId_structure.rpp')
 
 # Create a new project
 r = rpp.loads(s)
@@ -446,5 +446,3 @@ for detuned_performance_name in detuned_performance_names:
 
 # FIXME
 # Tubular Bell Wah (Dual, Detuned): BellWahhA does not find its voice (uses "Say Again") - is this for all "Dual, Detuned" performances?
-# The RPP file is maybe outdated, hence we are missing the additional note shift
-# The RPP file contains a reference to a third-party plugin which should be removed
