@@ -31,6 +31,7 @@ jobs:
            python minidexed2reaper.py
     - name: dx7IId
       run: |
+           git clone https://github.com/Perlence/rpp rppgit
            python create-rpp.py
     - uses: actions/upload-artifact@v3
       with:

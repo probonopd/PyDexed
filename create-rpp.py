@@ -13,12 +13,13 @@ if not os.path.isdir("rppgit"):
 
 sys.path.append("rppgit")
 
+print(dir(rpp))
+
 # Load the rpp module from the rpp subdirectory; DO NOT load rpp from the current directory
 import rpp
 import dx7
 import dx7II
 
-print(dir(rpp))
 
 # Check if the file tx816_structure.zip exists
 if not os.path.isfile("dx7IId_structure.zip"):
@@ -42,9 +43,9 @@ if not os.path.isfile("DX7IIfd.ROM1A.zip"):
     print("Download complete.")
     
 # Unzip the dx7IId_structure.rpp file from dx7IId_structure.zip
-#with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
-#    filename = "dx7IId_structure.rpp"
-#    zip.extract(filename)
+with zipfile.ZipFile("dx7IId_structure.zip", 'r') as zip:
+    filename = "dx7IId_structure.rpp"
+    zip.extract(filename)
 
 # Unzip Dexed_cart_1.0.zip
 zip_file_path = 'Dexed_cart_1.0.zip'
