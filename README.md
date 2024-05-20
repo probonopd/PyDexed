@@ -15,4 +15,5 @@ The objective is to reconstruct TX816-like performances in Reaper, roughly like 
 - [x] Make changes to Dexed plugin state in a Reaper RPP file and write changed Reaper RPP file (e.g, change the loaded bank of voices and the currently loaded voice)
 - [ ] Convert MiniDexed `performance.ini` to Reaper RPP files __(WIP)__
 - [ ] Generate Reaper RPP files for TX816 performances __(WIP)__
+- [ ] Do the same for Ableton Live __(WIP)__
 - [ ] ...
