@@ -158,11 +158,12 @@ def main():
                 params[k.strip()] = v.strip()
         # Print performance name above the table
         print(f"\n### {perf_name}\n")
-        print(f"| TG | Pan  | MIDI Channel | Voice Name         | Comments              |")
-        print(f"|----|------|--------------|---------------------|-----------------------|")
+        print(f"| TG | Pan  | MIDI Channel | Detune | Voice Name         | Comments              |")
+        print(f"|----|------|--------------|--------|---------------------|-----------------------|")
         for tg in range(1, 9):
             pan = params.get(f'Pan{tg}', '?')
             midi = params.get(f'MIDIChannel{tg}', '?')
+            detune = params.get(f'Detune{tg}', '?')
             vname = '?'
             vdata = params.get(f'VoiceData{tg}', None)
             comment = ''
@@ -176,6 +177,21 @@ def main():
                         else:
                             comment = comment_line
                     break
+            # Prüfe, ob NoteLimitLow/High gesetzt sind und ergänze Kommentar
+            nll = params.get(f'NoteLimitLow{tg}', None)
+            nlh = params.get(f'NoteLimitHigh{tg}', None)
+            if nll is not None and nlh is not None:
+                try:
+                    nll_int = int(nll)
+                    nlh_int = int(nlh)
+                    if nll_int != 0 or nlh_int != 127:
+                        note_comment = f"NoteLimitLow={nll_int}, NoteLimitHigh={nlh_int}"
+                        if comment:
+                            comment += f"; {note_comment}"
+                        else:
+                            comment = note_comment
+                except Exception:
+                    pass
             if vdata:
                 hexbytes = vdata.split()
                 if len(hexbytes) >= 155:
@@ -184,7 +200,7 @@ def main():
                         vname = dx7.get_voice_name(vced).strip()
                     except Exception:
                         vname = '?'
-            print(f"| {tg}  | {pan}   | {midi}           | {vname.ljust(19)}| {comment.ljust(21)}|")
+            print(f"| {tg}  | {pan}   | {midi}           | {detune}     | {vname.ljust(19)}| {comment.ljust(21)}|")
         # --- End summary ---
         if errors:
             print(f"{f}:")

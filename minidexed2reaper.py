@@ -377,6 +377,22 @@ def main():
                     elif param == 'AftertouchRange': value = '99'
                     elif param == 'AftertouchTarget': value = '0'
                 tg_dict[key] = value
+            # Nach dem Sammeln: NoteLimitLow/High aus function_data setzen, falls möglich
+            vdata = tg_dict.get(f'VoiceData{tg+1}', None)
+            if vdata:
+                hexbytes = vdata.split()
+                if len(hexbytes) >= 155:
+                    try:
+                        vced = [int(b, 16) for b in hexbytes[:155]]
+                        vced_name = dx7.get_voice_name(vced).strip()
+                        match = next((v for v in tx816.function_data if v["Voice"].strip() == vced_name), None)
+                        if match and "LOW" in match and "HIGH" in match:
+                            low_note = tx816.convert_named_note_to_midi(match["LOW"])
+                            high_note = tx816.convert_named_note_to_midi(match["HIGH"])
+                            tg_dict[f'NoteLimitLow{tg+1}'] = str(low_note)
+                            tg_dict[f'NoteLimitHigh{tg+1}'] = str(high_note)
+                    except Exception:
+                        pass
             tg_params.append(tg_dict)
         performances_params.append(tg_params)
 
@@ -388,10 +404,11 @@ def main():
             f.write(f"; MiniDexed Performance: {track_name}\n")
             # Write all TG parameters, inserting a comment above VoiceData with the VCED name
             for tg in range(8):
-                # Get the VCED name for this TG from VoiceData
+                # Vor dem Schreiben: NoteLimitLow/High aus function_data setzen, falls VoiceData vorhanden
+                vdata = performances_params[perf_index][tg].get(f'VoiceData{tg+1}', None)
                 vced_name = None
                 vced_desc = None
-                vdata = performances_params[perf_index][tg].get(f'VoiceData{tg+1}', None)
+                match = None
                 if vdata:
                     hexbytes = vdata.split()
                     if len(hexbytes) >= 155:
@@ -399,30 +416,24 @@ def main():
                             vced = [int(b, 16) for b in hexbytes[:155]]
                             vced_name = dx7.get_voice_name(vced).strip()
                             match = next((v for v in tx816.function_data if v["Voice"].strip() == vced_name), None)
-                            if match:
-                                vced_desc = match.get("Description", None)
+                            if match and "LOW" in match and "HIGH" in match:
+                                low_note = tx816.convert_named_note_to_midi(match["LOW"])
+                                high_note = tx816.convert_named_note_to_midi(match["HIGH"])
+                                performances_params[perf_index][tg][f'NoteLimitLow{tg+1}'] = str(low_note)
+                                performances_params[perf_index][tg][f'NoteLimitHigh{tg+1}'] = str(high_note)
                         except Exception:
-                            vced_name = None
+                            pass
                 for key, value in performances_params[perf_index][tg].items():
                     if key.startswith('VoiceData'):
-                        # Extrahiere VCED-Name und Beschreibung für jede VoiceData-Zeile
-                        vced_name = None
-                        vced_desc = None
-                        hexbytes = value.split()
-                        if len(hexbytes) >= 155:
-                            try:
-                                vced = [int(b, 16) for b in hexbytes[:155]]
-                                vced_name = dx7.get_voice_name(vced).strip()
-                                match = next((v for v in tx816.function_data if v["Voice"].strip() == vced_name), None)
-                                if match:
-                                    vced_desc = match.get("Description", None)
-                            except Exception:
-                                vced_name = None
+                        # Schreibe alle function_data Felder als auskommentierte Key-Value-Paare
+                        if match:
+                            for fkey, fval in match.items():
+                                f.write(f"; {fkey}={fval}\n")
                         comment = "; Voice: "
                         if vced_name:
                             comment += vced_name
-                        if vced_desc:
-                            comment += f" — {vced_desc}"
+                        if match and match.get("Description"):
+                            comment += f" — {match['Description']}"
                         f.write(comment + "\n")
                     f.write(f"{key}={value}\n")
             # Write global effects section (MiniDexed defaults)
