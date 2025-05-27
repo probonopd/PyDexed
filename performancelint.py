@@ -23,7 +23,7 @@ import dx7
 def lint_performance_ini(filepath):
     """
     Lint a MiniDexed performance INI file for spec compliance.
-    Checks all TG1-TG8 parameters and global effects section.
+    Checks all TG parameters and global effects section.
     """
     errors = []
     with open(filepath, 'r') as f:
@@ -36,6 +36,16 @@ def lint_performance_ini(filepath):
             continue
         k, v = line.split('=', 1)
         params[k.strip()] = v.strip()
+
+    # Find how many TGs are present by checking for VoiceDataN or MIDIChannelN keys
+    tg_numbers = set()
+    for k in params:
+        m = re.match(r'(VoiceData|MIDIChannel)(\d+)', k)
+        if m:
+            tg_numbers.add(int(m.group(2)))
+    if not tg_numbers:
+        tg_numbers = {1}  # Default to 1 if none found
+    max_tg = max(tg_numbers)
 
     # MiniDexed TG parameter spec (see performanceconfig.cpp and official docs)
     tg_params = [
@@ -67,8 +77,8 @@ def lint_performance_ini(filepath):
         ('AftertouchRange', 0, 99, 'int', '99'),
         ('AftertouchTarget', 0, 7, 'int', '0'),
     ]
-    # Check all TGs (TG1-TG8)
-    for tg in range(1, 9):
+    # Only check TGs present in the file
+    for tg in sorted(tg_numbers):
         has_voicedata = f"VoiceData{tg}" in params and params[f"VoiceData{tg}"]
         has_bank = f"BankNumber{tg}" in params and params[f"BankNumber{tg}"]
         has_voice = f"VoiceNumber{tg}" in params and params[f"VoiceNumber{tg}"]
@@ -77,7 +87,6 @@ def lint_performance_ini(filepath):
             if has_bank or has_voice:
                 errors.append(f"Warning: BankNumber{tg} and/or VoiceNumber{tg} are present but will not be used because VoiceData{tg} is present.")
         elif has_bank and has_voice:
-            # Only BankNumber/VoiceNumber present, that's OK
             pass
         else:
             errors.append(f"Missing VoiceData{tg} or BankNumber{tg} and VoiceNumber{tg}")
@@ -156,11 +165,19 @@ def main():
             if '=' in line:
                 k, v = line.split('=', 1)
                 params[k.strip()] = v.strip()
+        # Find how many TGs are present by checking for VoiceDataN or MIDIChannelN keys
+        tg_numbers = set()
+        for k in params:
+            m = re.match(r'(VoiceData|MIDIChannel)(\d+)', k)
+            if m:
+                tg_numbers.add(int(m.group(2)))
+        if not tg_numbers:
+            tg_numbers = {1}  # Default to 1 if none found
         # Print performance name above the table
         print(f"\n### {perf_name}\n")
         print(f"| TG | Pan  | MIDI Channel | Detune | Voice Name         | Comments              |")
         print(f"|----|------|--------------|--------|---------------------|-----------------------|")
-        for tg in range(1, 9):
+        for tg in sorted(tg_numbers):
             pan = params.get(f'Pan{tg}', '?')
             midi = params.get(f'MIDIChannel{tg}', '?')
             detune = params.get(f'Detune{tg}', '?')

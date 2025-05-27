@@ -9,6 +9,7 @@ import textwrap
 
 from reaper import *
 import tx816
+import dx7II
 
 def main():
 
@@ -355,6 +356,9 @@ def main():
     # --- Write MiniDexed performance INI files for each performance (track) ---
     if not os.path.exists("tx816"):
         os.makedirs("tx816")
+    # Add: Create dx7IId directory for output
+    if not os.path.exists("dx7IId"):
+        os.makedirs("dx7IId")
 
     # Collect TG parameter dicts for each performance (track)
     # Each entry in performances_params is a list of 8 dicts (one per TG)
@@ -546,6 +550,184 @@ def main():
             f.write("ReverbLowPass=30\n")
             f.write("ReverbDiffusion=65\n")
             f.write("ReverbLevel=99\n")
+
+    # --- DX7IId: Write MiniDexed performance INI files for each performance (track) ---
+    dx7IId_performance_count = 64
+    dx7IId_tg_count = 2
+    perfA = dx7II.PerformanceSyx("DX7IIFDPerf.SYX")
+    perfB = dx7II.PerformanceSyx("DX7IIFDPerfB.SYX")
+    performances = perfA.pceds + perfB.pceds  # 64 total
+    with open("DX7IIFDVoice32.SYX", "rb") as f:
+        sysexA = f.read()
+    with open("DX7IIFDVoice32B.SYX", "rb") as f:
+        sysexB = f.read()
+    # Table for performances 1-32 (INT and Voice Name for each TG)
+    dx7iid_table = [
+        # (INT_A, Name_A, INT_B, Name_B)
+        (1,  "Warm Stg A", 49, "Warm Stg B"),
+        (63, "XyloBrass", 25, "MalletHorn"),
+        (27, "StringBass", 57, "GuitarBox"),
+        (22, "Clavistuff", 48, "Clavistuff"),
+        (9,  "EbonyIvory", 67, "Phasers"),
+        (50, "KnockRoad", 62, "HardRoads"),
+        (43, "BellWahh A", 56, "BellWahh B"),
+        (32, "Shorgan", 41, "TapOrgan"),
+        (28, "SteelCans", 21, "EchoMallet"),
+        (7,  "FMilters", 35, "ClariSolo"),
+        (14, "Trumpet A", 24, "Trumpet B"),
+        (10, "Whisper A", 53, "Whisper B"),
+        (3,  "PickGuitar", 40, "Titeguitar"),
+        (46, "SilvaTrmpt", 54, "SilvaBrass"),
+        (1,  "Warm Stg A", 20, "ST.Elmo's"),
+        (7,  "FMilters", 17, "Phasers"),
+        (39, "SkweekBass", 62, "HardRoads"),
+        (64, "HarpsiWire", 52, "HarpsiBox"),
+        (34, "ElectoComb", 51, "LateDown"),
+        (31, "WireStrung", 5,  "FullTines"),
+        (44, "EleCello A", 60, "EleCello B"),
+        (12, "TouchOrgan", 16, "SongFlute"),
+        (11, "HarpStrum", 16, "SongFlute"),
+        (4,  "Analog-X", 42, "PitchaPad"),
+        (51, "HallOrch B", 58, "HallOrch A"),
+        (5,  "FullTines", 15, "FullTines"),
+        (19, "Ensemble", 15, "PianoBells"),
+        (23, "MultiPerc", 23, "MultiPerc"),
+        (30, "TempleGong", 29, "Koto"),
+        (15, "PianoBrite", 45, "PianoForte"),
+        (18, "Vibraphone", 41, "Vibraphone"),
+        (47, "Wallop A", 49, "Wallop B"),
+    ]
+    # Table for performances 33-64 (INT/CRT and Voice Name for each TG)
+    dx7iid_table_33_64 = [
+        # (INT/CRT_A, Name_A, INT/CRT_B, Name_B)
+        (2,   "MellowHorn", 37,  "FrenchHorn"),
+        (3,   "PipeOrgan", 47,  "PuffOrgan"),
+        (5,   "FullTines", 7,   "HardTines"),
+        (3,   "PickGuitar", 12, "SpitFlute"),
+        (12,  "TouchOrgan", 21, "BriteOrgan"),
+        (6,   "SuperBass", 11,  "ClavecIn"),
+        (13,  "Maribumba", 38,  "StonePhone"),
+        (15,  "HardBones", 34,  "HardTrumps"),
+        (3,   "PipeOrgan", 52,  "FC Choir"),
+        (10,  "LadyVox", 57,   "MaleChoir"),
+        (58,  "HallOrch A", 62, "Celeste"),
+        (43,  "OwlBass", 55,   "YesBunk"),
+        (59,  "HarmoniumA", 53, "HarmoniumB"),
+        (51,  "LateDown", 16,  "OctiLate"),
+        (8,   "Violins", 26,   "NewOrchest."),
+        (23,  "Thunderon", 61, "Explosion"),
+        (6,   "SuperBass", 13,  "BopBass"),
+        (9,   "EbonyIvory", 27, "BC Trumpet"),
+        (33,  "FingaPicka", 33, "FingaPicka"),
+        (60,  "Science", 8,    "Pluk"),
+        (4,   "ClaviPluck", 31, "Plukatan"),
+        (9,   "TingVoice", 24,  "RubberGong"),
+        (49,  "Warm Stg B", 25, "Englishorn"),
+        (20,  "Swissnare", 36,  "Piccolo"),
+        (14,  "Glastine A", 33, "Glastine B"),
+        (44,  "RubbaRoad", 45,  "Pianoforte"),
+        (41,  "TapOrgan", 31,  "TapOrgan"),
+        (45,  "PizzReverb", 45, "PizzReverb"),
+        (64,  "INIT VOICE", 64, "INIT VOICE"),
+        (64,  "INIT VOICE", 64, "INIT VOICE"), # filler
+        (64,  "INIT VOICE", 64, "INIT VOICE"), # filler
+        (64,  "INIT VOICE", 64, "INIT VOICE"), # filler
+    ]
+    for perf_index in range(dx7IId_performance_count):
+        perf = performances[perf_index]
+        perf_name = perf.pnam.strip() or f"DX7IId_Performance_{perf_index+1}"
+        ini_path = os.path.join("dx7IId", f"{str(perf_index+1).zfill(6)}_{perf_name}.ini")
+        with open(ini_path, 'w') as f:
+            f.write(f"; DX7IId Performance: {perf_name}\n")
+            for tg in range(dx7IId_tg_count):
+                fallback = False
+                if perf_index < 32:
+                    # Use table for 1-32
+                    INT = dx7iid_table[perf_index][0] if tg == 0 else dx7iid_table[perf_index][2]
+                    voice_num = INT - 1  # INT is 1-based, voice_num is 0-based
+                    bank = 'A' if INT <= 32 else 'B'
+                    if bank == 'A':
+                        vced = dx7.get_vced_from_bank_sysex(sysexA, voice_num)
+                    else:
+                        b_index = voice_num - 32
+                        if b_index < 0 or b_index > 31:
+                            print(f"Error: B bank index out of range: INT={INT}, voice_num={voice_num}, b_index={b_index}, perf_index={perf_index}, tg={tg}")
+                            b_index = 0  # fallback to first voice in B bank
+                        vced = dx7.get_vced_from_bank_sysex(sysexB, b_index)
+                    voicedata = ' '.join(f"{b:02X}" for b in vced) + " 00"  # 156 bytes
+                    vced_name = dx7.get_voice_name(vced).strip()
+                    comment = f"; INT {INT} — {vced_name}"
+                elif perf_index < 64:
+                    # Use table for 33-64
+                    idx = perf_index - 32
+                    INT = dx7iid_table_33_64[idx][0] if tg == 0 else dx7iid_table_33_64[idx][2]
+                    voice_num = INT - 1  # INT is 1-based, voice_num is 0-based
+                    bank = 'A' if INT <= 32 else 'B'
+                    if bank == 'A':
+                        vced = dx7.get_vced_from_bank_sysex(sysexA, voice_num)
+                    else:
+                        b_index = voice_num - 32
+                        if b_index < 0 or b_index > 31:
+                            print(f"Error: B bank index out of range: INT={INT}, voice_num={voice_num}, b_index={b_index}, perf_index={perf_index}, tg={tg}")
+                            b_index = 0  # fallback to first voice in B bank
+                        vced = dx7.get_vced_from_bank_sysex(sysexB, b_index)
+                    voicedata = ' '.join(f"{b:02X}" for b in vced) + " 00"  # 156 bytes
+                    vced_name = dx7.get_voice_name(vced).strip()
+                    comment = f"; INT {INT} — {vced_name}"
+                else:
+                    # Use original logic for >64 (should not happen)
+                    voice_num = perf.vnma if tg == 0 else perf.vnmb
+                    if not isinstance(voice_num, int) or voice_num < 0 or voice_num > 63:
+                        fallback = True
+                        voice_num = 0
+                    if voice_num < 32:
+                        vced = dx7.get_vced_from_bank_sysex(sysexA, voice_num)
+                    else:
+                        b_index = voice_num - 32
+                        if b_index < 0 or b_index > 31:
+                            print(f"Error: B bank index out of range: voice_num={voice_num}, b_index={b_index}, perf_index={perf_index}, tg={tg}")
+                            b_index = 0  # fallback to first voice in B bank
+                        vced = dx7.get_vced_from_bank_sysex(sysexB, b_index)
+                    voicedata = ' '.join(f"{b:02X}" for b in vced) + " 00"
+                    vced_name = dx7.get_voice_name(vced).strip()
+                    comment = f"; INT {voice_num+1} — {vced_name}"
+                    if fallback:
+                        print(f"Fallback to voice 0 for performance {perf_name} TG{tg+1}")
+                f.write(f"{comment}\n")
+                f.write(f"MIDIChannel{tg+1}=1\n")
+                f.write(f"Volume{tg+1}=100\n")
+                f.write(f"Pan{tg+1}=64\n")
+                f.write(f"Detune{tg+1}=0\n")
+                f.write(f"Cutoff{tg+1}=99\n")
+                f.write(f"Resonance{tg+1}=0\n")
+                f.write(f"NoteLimitLow{tg+1}=0\n")
+                f.write(f"NoteLimitHigh{tg+1}=127\n")
+                f.write(f"NoteShift{tg+1}=0\n")
+                f.write(f"ReverbSend{tg+1}=0\n")
+                f.write(f"PitchBendRange{tg+1}=2\n")
+                f.write(f"PitchBendStep{tg+1}=0\n")
+                f.write(f"PortamentoMode{tg+1}=0\n")
+                f.write(f"PortamentoGlissando{tg+1}=0\n")
+                f.write(f"PortamentoTime{tg+1}=0\n")
+                f.write(f"VoiceData{tg+1}={voicedata}\n")
+                f.write(f"MonoMode{tg+1}=0\n")
+                f.write(f"ModulationWheelRange{tg+1}=99\n")
+                f.write(f"ModulationWheelTarget{tg+1}=1\n")
+                f.write(f"FootControlRange{tg+1}=99\n")
+                f.write(f"FootControlTarget{tg+1}=0\n")
+                f.write(f"BreathControlRange{tg+1}=99\n")
+                f.write(f"BreathControlTarget{tg+1}=0\n")
+                f.write(f"AftertouchRange{tg+1}=99\n")
+                f.write(f"AftertouchTarget{tg+1}=0\n")
+            f.write("CompressorEnable=1\n")
+            f.write("ReverbEnable=0\n")
+            f.write("ReverbSize=70\n")
+            f.write("ReverbHighDamp=50\n")
+            f.write("ReverbLowDamp=50\n")
+            f.write("ReverbLowPass=30\n")
+            f.write("ReverbDiffusion=65\n")
+            f.write("ReverbLevel=99\n")
+    print("DX7IId .ini generation complete.")
 
     print(os.path.abspath('tx816.zip'))
     print("Done.")

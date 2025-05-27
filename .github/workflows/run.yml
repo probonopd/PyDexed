@@ -36,11 +36,12 @@ jobs:
            python create-rpp.py
     - uses: actions/upload-artifact@v4
       with:
-        name: tx816
+        name: tx816_and_dx7IId
         path: |
           tx816.rpp
           dx7IId_modified.rpp
           tx816
+          dx7IId
 
     - name: Upload to GitHub Releases (only when building from main branch)
       if: ${{ github.ref == 'refs/heads/main' }}
@@ -48,4 +49,4 @@ jobs:
            set -ex
            wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
            bash ./upload.sh ./tx816.zip ./dx7IId.zip
-           
+
