@@ -36,8 +36,10 @@ def main():
         # Extract Dexed_cart_1.0\Original Yamaha\DX7IIFD\*
         with zipfile.ZipFile("Dexed_cart_1.0.zip", "r") as zip_ref:
             for member in zip_ref.namelist():
-                if member.startswith("Dexed_cart_1.0/Original Yamaha/DX7IIFD/"):
-                    zip_ref.extract(member, ".")
+                if member.startswith("Dexed_cart_1.0/Original Yamaha/DX7IIFD/") and not member.endswith("/"):
+                    filename = os.path.basename(member)
+                    with zip_ref.open(member) as source, open(filename, "wb") as target:
+                        target.write(source.read())
 
     # --- Load TX816 Performance Notes for INI comments ---
     perf_notes = {}
