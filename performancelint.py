@@ -1,0 +1,175 @@
+#!/usr/bin/env python3
+# performancelint.py
+#
+# Linter for MiniDexed performance INI files.
+#
+# This script checks MiniDexed performance INI files for:
+#   - Presence of all required parameters for each Tone Generator (TG1-TG8)
+#   - Correct value ranges and types for each parameter
+#   - Correct formatting of VoiceData (156 hex bytes if present)
+#   - Presence and validity of global effects parameters
+#
+# The spec followed is based on the official MiniDexed implementation and documentation as of 2025-05-27.
+# See: https://github.com/probonopd/MiniDexed and the code in performanceconfig.cpp
+#
+# Usage: python3 performancelint.py [folder]
+#        (defaults to 'tx816' if no folder is given)
+
+import os
+import sys
+import re
+import dx7
+
+def lint_performance_ini(filepath):
+    """
+    Lint a MiniDexed performance INI file for spec compliance.
+    Checks all TG1-TG8 parameters and global effects section.
+    """
+    errors = []
+    with open(filepath, 'r') as f:
+        # Ignore comments and blank lines
+        lines = [line.strip() for line in f if line.strip() and not line.strip().startswith(';')]
+    params = dict()
+    for line in lines:
+        if '=' not in line:
+            errors.append(f"Malformed line: {line}")
+            continue
+        k, v = line.split('=', 1)
+        params[k.strip()] = v.strip()
+
+    # MiniDexed TG parameter spec (see performanceconfig.cpp and official docs)
+    tg_params = [
+        ('BankNumber', 0, 127, 'int', '0'),
+        ('VoiceNumber', 1, 32, 'int', '1'),
+        ('MIDIChannel', 0, 255, 'int', '1'),
+        ('Volume', 0, 127, 'int', '100'),
+        ('Pan', 0, 127, 'int', '64'),
+        ('Detune', -99, 99, 'int', '0'),
+        ('Cutoff', 0, 99, 'int', '99'),
+        ('Resonance', 0, 99, 'int', '0'),
+        ('NoteLimitLow', 0, 127, 'int', '0'),
+        ('NoteLimitHigh', 0, 127, 'int', '127'),
+        ('NoteShift', -24, 24, 'int', '0'),
+        ('ReverbSend', 0, 99, 'int', '50'),
+        ('PitchBendRange', 0, 12, 'int', '2'),
+        ('PitchBendStep', 0, 12, 'int', '0'),
+        ('PortamentoMode', 0, 1, 'int', '0'),
+        ('PortamentoGlissando', 0, 1, 'int', '0'),
+        ('PortamentoTime', 0, 99, 'int', '0'),
+        ('VoiceData', None, None, 'hex', ''),  # 156 hex bytes if present
+        ('MonoMode', 0, 1, 'int', '0'),
+        ('ModulationWheelRange', 0, 99, 'int', '99'),
+        ('ModulationWheelTarget', 0, 7, 'int', '1'),
+        ('FootControlRange', 0, 99, 'int', '99'),
+        ('FootControlTarget', 0, 7, 'int', '0'),
+        ('BreathControlRange', 0, 99, 'int', '99'),
+        ('BreathControlTarget', 0, 7, 'int', '0'),
+        ('AftertouchRange', 0, 99, 'int', '99'),
+        ('AftertouchTarget', 0, 7, 'int', '0'),
+    ]
+    # Check all TGs (TG1-TG8)
+    for tg in range(1, 9):
+        for param, minv, maxv, typ, default in tg_params:
+            key = f"{param}{tg}"
+            if key not in params:
+                errors.append(f"Missing {key}")
+                continue
+            value = params[key]
+            if typ == 'int':
+                try:
+                    ival = int(value)
+                    if ival < minv or ival > maxv:
+                        errors.append(f"{key} out of range: {ival} (should be {minv}..{maxv})")
+                except Exception:
+                    errors.append(f"{key} not an integer: {value}")
+            elif typ == 'hex':
+                if value:
+                    # VoiceData must be 156 space-separated hex bytes if present
+                    hexbytes = value.split()
+                    if len(hexbytes) != 156:
+                        errors.append(f"{key} should have 156 bytes, has {len(hexbytes)}")
+                    for b in hexbytes:
+                        if not re.fullmatch(r'[0-9A-Fa-f]{2}', b):
+                            errors.append(f"{key} contains non-hex byte: {b}")
+    # Global effects section (see MiniDexed spec)
+    global_params = [
+        ('CompressorEnable', 0, 1, 'int', '1'),
+        ('ReverbEnable', 0, 1, 'int', '1'),
+        ('ReverbSize', 0, 99, 'int', '70'),
+        ('ReverbHighDamp', 0, 99, 'int', '50'),
+        ('ReverbLowDamp', 0, 99, 'int', '50'),
+        ('ReverbLowPass', 0, 99, 'int', '30'),
+        ('ReverbDiffusion', 0, 99, 'int', '65'),
+        ('ReverbLevel', 0, 99, 'int', '99'),
+    ]
+    for param, minv, maxv, typ, default in global_params:
+        if param not in params:
+            errors.append(f"Missing {param}")
+            continue
+        value = params[param]
+        try:
+            ival = int(value)
+            if ival < minv or ival > maxv:
+                errors.append(f"{param} out of range: {ival} (should be {minv}..{maxv})")
+        except Exception:
+            errors.append(f"{param} not an integer: {value}")
+    return errors
+
+def main():
+    """
+    Lint all .ini files in the given folder (default: tx816).
+    Prints errors for each file, or 'All files OK.' if all pass.
+    """
+    folder = sys.argv[1] if len(sys.argv) > 1 else 'tx816'
+    files = [f for f in os.listdir(folder) if f.endswith('.ini')]
+    any_errors = False
+    for f in sorted(files):
+        path = os.path.join(folder, f)
+        errors = lint_performance_ini(path)
+        # --- Print summary for each file ---
+        # Try to extract performance name from the first comment or filename
+        perf_name = f
+        with open(path, 'r') as fin:
+            lines_raw = fin.readlines()
+            for line in lines_raw:
+                if line.strip().startswith('; MiniDexed Performance:'):
+                    perf_name = line.strip().split(':',1)[-1].strip()
+                    break
+        # Now parse params as before
+        params = dict()
+        with open(path, 'r') as fin:
+            lines = [line.strip() for line in fin if line.strip() and not line.strip().startswith(';')]
+        for line in lines:
+            if '=' in line:
+                k, v = line.split('=', 1)
+                params[k.strip()] = v.strip()
+        # Print performance name above the table
+        print(f"\n### {perf_name}\n")
+        print("| TG | Bank | Voice | MIDI Channel | Voice Name         |")
+        print("|----|------|-------|--------------|---------------------|")
+        for tg in range(1, 9):
+            bank = params.get(f'BankNumber{tg}', '?')
+            voice = params.get(f'VoiceNumber{tg}', '?')
+            midi = params.get(f'MIDIChannel{tg}', '?')
+            vname = '?'
+            vdata = params.get(f'VoiceData{tg}', None)
+            if vdata:
+                hexbytes = vdata.split()
+                if len(hexbytes) >= 155:
+                    try:
+                        vced = [int(b, 16) for b in hexbytes[:155]]
+                        vname = dx7.get_voice_name(vced).strip()
+                    except Exception:
+                        vname = '?'
+            print(f"| {tg}  | {bank}   | {voice}     | {midi}           | {vname.ljust(19)}|")
+        # --- End summary ---
+        if errors:
+            print(f"{f}:")
+            for e in errors:
+                print(f"  {e}")
+            any_errors = True
+    if not any_errors:
+        print("All files OK.")
+
+if __name__ == "__main__":
+    main()

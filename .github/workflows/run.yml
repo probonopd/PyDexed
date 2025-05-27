@@ -29,6 +29,7 @@ jobs:
     - name: tx816
       run: |
            python minidexed2reaper.py
+           python performancelint.py tx816
     - name: dx7IId
       run: |
            git clone https://github.com/Perlence/rpp rppgit
@@ -39,6 +40,7 @@ jobs:
         path: |
             - ./tx816.rpp
             - ./dx7IId_modified.rpp
+            - ./tx816
     - name: Upload to GitHub Releases (only when building from main branch)
       if: ${{ github.ref == 'refs/heads/main' }}
       run: |

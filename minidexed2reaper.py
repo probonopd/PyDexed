@@ -342,6 +342,97 @@ def main():
         zip.write('tx816.rpp')
         zip.write('tx816_foot_breath_off.rpp')
 
+    # --- Write MiniDexed performance INI files for each performance (track) ---
+    if not os.path.exists("tx816"):
+        os.makedirs("tx816")
+
+    # Collect TG parameter dicts for each performance (track)
+    # Each entry in performances_params is a list of 8 dicts (one per TG)
+    performances_params = []
+    for perf_index, track_name in enumerate(track_names):
+        tg_params = []
+        for tg in range(8):
+            # Find the ini file for this performance and TG
+            zipped_file = zipfile.ZipFile("MDX_Vault-main.zip")
+            for file in zipped_file.namelist():
+                if file.startswith("MDX_Vault-main/TX816/Factory/" + str(perf_index+1).zfill(6)) and file.endswith(".ini"):
+                    ini_file_name = file
+                    break
+            with zipped_file.open(ini_file_name) as file:
+                ini_file = file.read()
+                with open(os.path.basename(ini_file_name), 'wb') as f:
+                    f.write(ini_file)
+            ini = inifile.IniFile(os.path.basename(ini_file_name))
+            os.remove(os.path.basename(ini_file_name))
+            # Collect all required parameters for this TG
+            tg_dict = {}
+            for param in [
+                'BankNumber', 'VoiceNumber', 'MIDIChannel', 'Volume', 'Pan', 'Detune', 'Cutoff', 'Resonance',
+                'NoteLimitLow', 'NoteLimitHigh', 'NoteShift', 'ReverbSend', 'PitchBendRange', 'PitchBendStep',
+                'PortamentoMode', 'PortamentoGlissando', 'PortamentoTime', 'VoiceData', 'MonoMode',
+                'ModulationWheelRange', 'ModulationWheelTarget', 'FootControlRange', 'FootControlTarget',
+                'BreathControlRange', 'BreathControlTarget', 'AftertouchRange', 'AftertouchTarget']:
+                key = f"{param}{tg+1}"
+                value = ini.get(key)
+                if value is None:
+                    # Use MiniDexed default if missing
+                    if param == 'BankNumber': value = '0'
+                    elif param == 'VoiceNumber': value = '1'
+                    elif param == 'MIDIChannel': value = '1'
+                    elif param == 'Volume': value = '100'
+                    elif param == 'Pan': value = '64'
+                    elif param == 'Detune': value = '0'
+                    elif param == 'Cutoff': value = '99'
+                    elif param == 'Resonance': value = '0'
+                    elif param == 'NoteLimitLow': value = '0'
+                    elif param == 'NoteLimitHigh': value = '127'
+                    elif param == 'NoteShift': value = '0'
+                    elif param == 'ReverbSend': value = '50'
+                    elif param == 'PitchBendRange': value = '2'
+                    elif param == 'PitchBendStep': value = '0'
+                    elif param == 'PortamentoMode': value = '0'
+                    elif param == 'PortamentoGlissando': value = '0'
+                    elif param == 'PortamentoTime': value = '0'
+                    elif param == 'VoiceData': value = ''
+                    elif param == 'MonoMode': value = '0'
+                    elif param == 'ModulationWheelRange': value = '99'
+                    elif param == 'ModulationWheelTarget': value = '1'
+                    elif param == 'FootControlRange': value = '99'
+                    elif param == 'FootControlTarget': value = '0'
+                    elif param == 'BreathControlRange': value = '99'
+                    elif param == 'BreathControlTarget': value = '0'
+                    elif param == 'AftertouchRange': value = '99'
+                    elif param == 'AftertouchTarget': value = '0'
+                tg_dict[key] = value
+            tg_params.append(tg_dict)
+        performances_params.append(tg_params)
+
+    # Write one INI file per performance
+    for perf_index, track_name in enumerate(track_names):
+        ini_path = os.path.join("tx816", f"{str(perf_index+1).zfill(6)}_{track_name}.ini")
+        with open(ini_path, 'w') as f:
+            # Write a comment at the beginning with the performance name
+            f.write(f"; MiniDexed Performance: {track_name}\n")
+            # Write all TG parameters, inserting a comment above VoiceData with the VCED name
+            for tg in range(8):
+                # Try to get the VCED name for this TG
+                vced_name = performances_params[perf_index][tg].get(f'VCEDName{tg+1}', None)
+                for key, value in performances_params[perf_index][tg].items():
+                    if key.startswith('VoiceData'):
+                        # Write VCED name comment if available
+                        if vced_name:
+                            f.write(f"; VCED Name: {vced_name}\n")
+                    f.write(f"{key}={value}\n")
+            # Write global effects section (MiniDexed defaults)
+            f.write("CompressorEnable=1\n")
+            f.write("ReverbEnable=0\n")
+            f.write("ReverbSize=70\n")
+            f.write("ReverbHighDamp=50\n")
+            f.write("ReverbLowDamp=50\n")
+            f.write("ReverbLowPass=30\n")
+            f.write("ReverbDiffusion=65\n")
+            f.write("ReverbLevel=99\n")
+
     print(os.path.abspath('tx816.zip'))
 
     print("Done.")
