@@ -33,6 +33,11 @@ def main():
         print("Downloading Dexed_cart_1.0.zip...")
         urllib.request.urlretrieve("http://hsjp.eu/downloads/Dexed/Dexed_cart_1.0.zip", "Dexed_cart_1.0.zip")
         print("Download complete.")
+        # Extract Dexed_cart_1.0\Original Yamaha\DX7IIFD\*
+        with zipfile.ZipFile("Dexed_cart_1.0.zip", "r") as zip_ref:
+            for member in zip_ref.namelist():
+                if member.startswith("Dexed_cart_1.0/Original Yamaha/DX7IIFD/"):
+                    zip_ref.extract(member, ".")
 
     # --- Load TX816 Performance Notes for INI comments ---
     perf_notes = {}
