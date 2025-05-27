@@ -5,6 +5,7 @@ import os
 import urllib.request
 import zipfile
 import dx7
+import textwrap
 
 from reaper import *
 import tx816
@@ -31,6 +32,34 @@ def main():
         print("Downloading Dexed_cart_1.0.zip...")
         urllib.request.urlretrieve("http://hsjp.eu/downloads/Dexed/Dexed_cart_1.0.zip", "Dexed_cart_1.0.zip")
         print("Download complete.")
+
+    # --- Load TX816 Performance Notes for INI comments ---
+    perf_notes = {}
+    notes_path = "TX816_Performance_Notes.md"
+    if os.path.exists(notes_path):
+        with open(notes_path, "r", encoding="utf-8") as nf:
+            lines = nf.readlines()
+        current_num = None
+        current_lines = []
+        for line in lines:
+            if line.strip().startswith("### "):
+                # e.g. ### 1. PIANO
+                parts = line.strip().split()
+                if len(parts) > 1 and parts[1][0].isdigit():
+                    if current_num is not None and current_lines:
+                        perf_notes[current_num] = " ".join(l.strip() for l in current_lines if l.strip())
+                    try:
+                        current_num = int(parts[1].split(".")[0])
+                    except Exception:
+                        current_num = None
+                    current_lines = []
+                continue
+            if current_num is not None:
+                if line.strip().startswith("### ") or line.strip().startswith("### Notes"):
+                    continue
+                current_lines.append(line)
+        if current_num is not None and current_lines:
+            perf_notes[current_num] = " ".join(l.strip() for l in current_lines if l.strip())
 
     # Unzip the tx816_structure.rpp file from tx816_structure.zip
     with zipfile.ZipFile("tx816_structure.zip", 'r') as zip:
@@ -423,6 +452,12 @@ def main():
         with open(ini_path, 'w') as f:
             # Write a comment at the beginning with the performance name
             f.write(f"; TX816 Performance: {track_name}\n")
+            # Write performance notes as a comment if available, wrapped to 80 chars
+            note = perf_notes.get(perf_index+1)
+            if note:
+                f.write(f"; Description from TX816 Performance Notes:\n")
+                for line in textwrap.wrap(note, width=80):
+                    f.write(f"; {line}\n")
             # Write all TG parameters, inserting a comment above VoiceData with the VCED name
             for tg in range(8):
                 # Before writing: Set NoteLimitLow/High from function_data if VoiceData is available

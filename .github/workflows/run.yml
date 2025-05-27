@@ -38,9 +38,10 @@ jobs:
       with:
         name: tx816
         path: |
-            - ./tx816.rpp
-            - ./dx7IId_modified.rpp
-            - ./tx816
+          tx816.rpp
+          dx7IId_modified.rpp
+          tx816
+
     - name: Upload to GitHub Releases (only when building from main branch)
       if: ${{ github.ref == 'refs/heads/main' }}
       run: |
