@@ -167,7 +167,7 @@ def main():
             vname = '?'
             vdata = params.get(f'VoiceData{tg}', None)
             comment = ''
-            # Suche Kommentar direkt über VoiceData-Zeile
+            # Search for comment directly above the VoiceData line
             for i, line in enumerate(lines_raw):
                 if line.strip().startswith(f'VoiceData{tg}='):
                     if i > 0 and lines_raw[i-1].strip().startswith(';'):
@@ -177,27 +177,36 @@ def main():
                         else:
                             comment = comment_line
                     break
-            # Prüfe, ob NoteLimitLow/High gesetzt sind und ergänze Kommentar
+            # Check if NoteLimitLow/High are set and add to comment
             nll = params.get(f'NoteLimitLow{tg}', None)
             nlh = params.get(f'NoteLimitHigh{tg}', None)
             if nll is not None and nlh is not None:
-                try:
-                    nll_int = int(nll)
-                    nlh_int = int(nlh)
-                    if nll_int != 0 or nlh_int != 127:
-                        note_comment = f"NoteLimitLow={nll_int}, NoteLimitHigh={nlh_int}"
-                        if comment:
-                            comment += f"; {note_comment}"
-                        else:
-                            comment = note_comment
-                except Exception:
-                    pass
+                nll_int = int(nll)
+                nlh_int = int(nlh)
+                import tx816
+                nll_name = tx816.midi_number_to_note(nll_int)
+                nlh_name = tx816.midi_number_to_note(nlh_int)
+                if nll_int != 0 or nlh_int != 127:
+                    note_comment = f"Limited from {nll_name} to {nlh_name}"
+                    if comment:
+                        comment += f"; {note_comment}"
+                    else:
+                        comment = note_comment
+
             if vdata:
                 hexbytes = vdata.split()
                 if len(hexbytes) >= 155:
                     try:
                         vced = [int(b, 16) for b in hexbytes[:155]]
                         vname = dx7.get_voice_name(vced).strip()
+                        # Check for Aftertouch (P A.TCH != 0)
+                        import tx816
+                        match = next((v for v in tx816.function_data if v["Voice"].strip() == vname), None)
+                        if match and str(match.get("P A.TCH", "0")) != "0":
+                            if comment:
+                                comment += "; Aftertouch"
+                            else:
+                                comment = "Aftertouch"
                     except Exception:
                         vname = '?'
             print(f"| {tg}  | {pan}   | {midi}           | {detune}     | {vname.ljust(19)}| {comment.ljust(21)}|")

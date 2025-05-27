@@ -377,8 +377,9 @@ def main():
                     elif param == 'AftertouchRange': value = '99'
                     elif param == 'AftertouchTarget': value = '0'
                 tg_dict[key] = value
-            # Nach dem Sammeln: NoteLimitLow/High aus function_data setzen, falls möglich
+            # After collecting: Set NoteLimitLow/High and other fields from function_data if possible
             vdata = tg_dict.get(f'VoiceData{tg+1}', None)
+            match = None
             if vdata:
                 hexbytes = vdata.split()
                 if len(hexbytes) >= 155:
@@ -386,11 +387,31 @@ def main():
                         vced = [int(b, 16) for b in hexbytes[:155]]
                         vced_name = dx7.get_voice_name(vced).strip()
                         match = next((v for v in tx816.function_data if v["Voice"].strip() == vced_name), None)
-                        if match and "LOW" in match and "HIGH" in match:
-                            low_note = tx816.convert_named_note_to_midi(match["LOW"])
-                            high_note = tx816.convert_named_note_to_midi(match["HIGH"])
-                            tg_dict[f'NoteLimitLow{tg+1}'] = str(low_note)
-                            tg_dict[f'NoteLimitHigh{tg+1}'] = str(high_note)
+                        if match:
+                            # Note limits
+                            if "LOW" in match and "HIGH" in match:
+                                low_note = tx816.convert_named_note_to_midi(match["LOW"])
+                                high_note = tx816.convert_named_note_to_midi(match["HIGH"])
+                                tg_dict[f'NoteLimitLow{tg+1}'] = str(int(low_note))
+                                tg_dict[f'NoteLimitHigh{tg+1}'] = str(int(high_note))
+                            # MonoMode
+                            tg_dict[f'MonoMode{tg+1}'] = '1' if match.get("POLY/MONO", "POLY") == "MONO" else '0'
+                            # Portamento
+                            tg_dict[f'PortamentoGlissando{tg+1}'] = str(int(match.get("gliss", 0)))
+                            tg_dict[f'PortamentoTime{tg+1}'] = str(int(match.get("time", 0)))
+                            # Pitch Bend
+                            tg_dict[f'PitchBendRange{tg+1}'] = str(int(match.get("range", 2)))
+                            tg_dict[f'PitchBendStep{tg+1}'] = str(int(match.get("step", 0)))
+                            # Controller Ranges
+                            tg_dict[f'ModulationWheelRange{tg+1}'] = str(int(match.get("R MOD", 99)))
+                            tg_dict[f'FootControlRange{tg+1}'] = str(int(match.get("R F.C", 99)))
+                            tg_dict[f'BreathControlRange{tg+1}'] = str(int(match.get("R B.C", 99)))
+                            tg_dict[f'AftertouchRange{tg+1}'] = str(int(match.get("R A.TCH", 99)))
+                            # Controller Targets (only P*)
+                            tg_dict[f'ModulationWheelTarget{tg+1}'] = str(int(match.get("P MOD", 1)))
+                            tg_dict[f'FootControlTarget{tg+1}'] = str(int(match.get("P F.C", 0)))
+                            tg_dict[f'BreathControlTarget{tg+1}'] = str(int(match.get("P B.C", 0)))
+                            tg_dict[f'AftertouchTarget{tg+1}'] = str(int(match.get("P A.TCH", 0)))
                     except Exception:
                         pass
             tg_params.append(tg_dict)
@@ -401,10 +422,10 @@ def main():
         ini_path = os.path.join("tx816", f"{str(perf_index+1).zfill(6)}_{track_name}.ini")
         with open(ini_path, 'w') as f:
             # Write a comment at the beginning with the performance name
-            f.write(f"; MiniDexed Performance: {track_name}\n")
+            f.write(f"; TX816 Performance: {track_name}\n")
             # Write all TG parameters, inserting a comment above VoiceData with the VCED name
             for tg in range(8):
-                # Vor dem Schreiben: NoteLimitLow/High aus function_data setzen, falls VoiceData vorhanden
+                # Before writing: Set NoteLimitLow/High from function_data if VoiceData is available
                 vdata = performances_params[perf_index][tg].get(f'VoiceData{tg+1}', None)
                 vced_name = None
                 vced_desc = None
@@ -425,10 +446,33 @@ def main():
                             pass
                 for key, value in performances_params[perf_index][tg].items():
                     if key.startswith('VoiceData'):
-                        # Schreibe alle function_data Felder als auskommentierte Key-Value-Paare
+                        # Write all function_data fields as commented key-value pairs
                         if match:
+                            # Mapping from function_data keys to MiniDexed INI keys
+                            mapping = {
+                                'LOW': f'NoteLimitLow{tg+1}',
+                                'HIGH': f'NoteLimitHigh{tg+1}',
+                                'POLY/MONO': f'MonoMode{tg+1}',
+                                'gliss': f'PortamentoGlissando{tg+1}',
+                                'time': f'PortamentoTime{tg+1}',
+                                'range': f'PitchBendRange{tg+1}',
+                                'step': f'PitchBendStep{tg+1}',
+                                'R MOD': f'ModulationWheelRange{tg+1}',
+                                'P MOD': f'ModulationWheelTarget{tg+1}',
+                                'R F.C': f'FootControlRange{tg+1}',
+                                'P F.C': f'FootControlTarget{tg+1}',
+                                'R B.C': f'BreathControlRange{tg+1}',
+                                'P B.C': f'BreathControlTarget{tg+1}',
+                                'R A.TCH': f'AftertouchRange{tg+1}',
+                                'P A.TCH': f'AftertouchTarget{tg+1}',
+                                # Add more mappings as needed
+                            }
                             for fkey, fval in match.items():
-                                f.write(f"; {fkey}={fval}\n")
+                                ini_key = mapping.get(fkey, None)
+                                if ini_key:
+                                    f.write(f"; {fkey}={fval}  # mapped to {ini_key}\n")
+                                else:
+                                    f.write(f"; {fkey}={fval}  # FIXME: not mapped yet\n")
                         comment = "; Voice: "
                         if vced_name:
                             comment += vced_name
