@@ -35,6 +35,7 @@ def main():
 
     # --- Load TX816 Performance Notes for INI comments ---
     perf_notes = {}
+    perf_names = {}
     notes_path = "TX816_Performance_Notes.md"
     if os.path.exists(notes_path):
         with open(notes_path, "r", encoding="utf-8") as nf:
@@ -50,6 +51,11 @@ def main():
                         perf_notes[current_num] = " ".join(l.strip() for l in current_lines if l.strip())
                     try:
                         current_num = int(parts[1].split(".")[0])
+                        # Get the name after the number, e.g. 'PIANO' in '### 1. PIANO'
+                        if len(parts) > 2:
+                            perf_names[current_num] = " ".join(parts[2:])
+                        elif len(parts) > 1:
+                            perf_names[current_num] = parts[1][parts[1].find('.')+1:].strip()
                     except Exception:
                         current_num = None
                     current_lines = []
@@ -448,10 +454,22 @@ def main():
 
     # Write one INI file per performance
     for perf_index, track_name in enumerate(track_names):
-        ini_path = os.path.join("tx816", f"{str(perf_index+1).zfill(6)}_{track_name}.ini")
+        perf_name = perf_names.get(perf_index+1, track_name)
+        # Sanitize perf_name for filename (remove/replace problematic chars)
+        # Remove special characters, trim, then replace whitespace with underscores
+        import re
+        safe_perf_name = perf_name.title()
+        # Remove special characters (keep alphanum, space, dash, underscore)
+        safe_perf_name = re.sub(r'[^A-Za-z0-9 _-]', '', safe_perf_name)
+        safe_perf_name = safe_perf_name.strip()
+        safe_perf_name = re.sub(r'\s+', '_', safe_perf_name)
+        while '__' in safe_perf_name:
+            safe_perf_name = safe_perf_name.replace('__', '_')
+        safe_perf_name = safe_perf_name.strip('_')
+        ini_path = os.path.join("tx816", f"{str(perf_index+1).zfill(6)}_{safe_perf_name}.ini")
         with open(ini_path, 'w') as f:
-            # Write a comment at the beginning with the performance name
-            f.write(f"; TX816 Performance: {track_name}\n")
+            # Write a comment at the beginning with the performance name from the notes if available
+            f.write(f"; TX816 Performance: {perf_name}\n")
             # Write performance notes as a comment if available, wrapped to 80 chars
             note = perf_notes.get(perf_index+1)
             if note:
@@ -514,7 +532,11 @@ def main():
                         if match and match.get("Description"):
                             comment += f" — {match['Description']}"
                         f.write(comment + "\n")
-                    f.write(f"{key}={value}\n")
+                    if key.startswith('ReverbSend') and value != '0':
+                        f.write("; NOTE: Reverb added; not part of the original performance\n")
+                        f.write(f"{key}={value}\n")
+                    else:
+                        f.write(f"{key}={value}\n")
             # Write global effects section (MiniDexed defaults)
             f.write("CompressorEnable=1\n")
             f.write("ReverbEnable=0\n")
