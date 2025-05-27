@@ -34,7 +34,7 @@ jobs:
       run: |
            git clone https://github.com/Perlence/rpp rppgit
            python create-rpp.py
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: tx816
         path: |

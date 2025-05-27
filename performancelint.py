@@ -145,11 +145,10 @@ def main():
                 params[k.strip()] = v.strip()
         # Print performance name above the table
         print(f"\n### {perf_name}\n")
-        print("| TG | Bank | Voice | MIDI Channel | Voice Name         |")
-        print("|----|------|-------|--------------|---------------------|")
+        print("| TG | Pan  | MIDI Channel | Voice Name         |")
+        print("|----|------|--------------|---------------------|")
         for tg in range(1, 9):
-            bank = params.get(f'BankNumber{tg}', '?')
-            voice = params.get(f'VoiceNumber{tg}', '?')
+            pan = params.get(f'Pan{tg}', '?')
             midi = params.get(f'MIDIChannel{tg}', '?')
             vname = '?'
             vdata = params.get(f'VoiceData{tg}', None)
@@ -161,7 +160,7 @@ def main():
                         vname = dx7.get_voice_name(vced).strip()
                     except Exception:
                         vname = '?'
-            print(f"| {tg}  | {bank}   | {voice}     | {midi}           | {vname.ljust(19)}|")
+            print(f"| {tg}  | {pan}   | {midi}           | {vname.ljust(19)}|")
         # --- End summary ---
         if errors:
             print(f"{f}:")

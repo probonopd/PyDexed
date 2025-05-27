@@ -367,7 +367,7 @@ def main():
             # Collect all required parameters for this TG
             tg_dict = {}
             for param in [
-                'BankNumber', 'VoiceNumber', 'MIDIChannel', 'Volume', 'Pan', 'Detune', 'Cutoff', 'Resonance',
+                'MIDIChannel', 'Volume', 'Pan', 'Detune', 'Cutoff', 'Resonance',
                 'NoteLimitLow', 'NoteLimitHigh', 'NoteShift', 'ReverbSend', 'PitchBendRange', 'PitchBendStep',
                 'PortamentoMode', 'PortamentoGlissando', 'PortamentoTime', 'VoiceData', 'MonoMode',
                 'ModulationWheelRange', 'ModulationWheelTarget', 'FootControlRange', 'FootControlTarget',
@@ -376,9 +376,7 @@ def main():
                 value = ini.get(key)
                 if value is None:
                     # Use MiniDexed default if missing
-                    if param == 'BankNumber': value = '0'
-                    elif param == 'VoiceNumber': value = '1'
-                    elif param == 'MIDIChannel': value = '1'
+                    if param == 'MIDIChannel': value = '1'
                     elif param == 'Volume': value = '100'
                     elif param == 'Pan': value = '64'
                     elif param == 'Detune': value = '0'
