@@ -4,6 +4,7 @@ import inifile
 import os
 import urllib.request
 import zipfile
+import dx7
 
 from reaper import *
 import tx816
@@ -63,7 +64,6 @@ def main():
         
         track_name = os.path.basename(ini_file_name)
         track_name = track_name[track_name.find('_')+1:track_name.rfind('.')]
-        print(track_name,  "(TG" + str(tg_number+1) + ")")
         if track_name not in track_names:
             track_names.append(track_name)
 
@@ -74,14 +74,9 @@ def main():
             with open(os.path.basename(ini_file_name), 'wb') as f:
                 f.write(ini_file)
 
-        # print("Loading ini file: " + ini_file_name)
         ini = inifile.IniFile(os.path.basename(ini_file_name))
         # Delete the ini file
         os.remove(os.path.basename(ini_file_name))
-
-        # NOTE: This only works as long as editing the plugin_instance object does not change the number of lines in rpp.lines;
-        # if it did, the line numbers of the other plugin instances would be wrong and we would have to find them again in each iteration
-        # (this is probably where we would need to start using the UUIDs of the plugin instances)
 
         DS = dexed.DexedState()
         DS.parse_data_blob(plugin_instance.blobs[1])
@@ -89,11 +84,8 @@ def main():
         # Edit dexed_state_dict here
                 
         # For the first 8 plugin instances, set the program to 0, for the next 8 plugin instances, set the program to 1, and so on
-        # print ("Setting instance " + str(i) + " to program " + str(track_number))
         
         DS.dexed_state_dict['dexedState']['@currentProgram'] = str(track_number)
-
-        # NOTE: This does not actually change the loaded voice; to do that, change the ['dexedState']['dexedBlob']['@program']
 
         DS.dexed_state_dict['dexedState']['@opSwitch'] = "111111" # Seems to change when another program is loaded from the Dexed UI
 
@@ -122,7 +114,6 @@ def main():
         converted_detune = int(detuneN_ini) / 99 * 1398101
         # Round to 0 decimal places
         converted_detune = int(round(converted_detune, 0))
-        # print("Original detune: " + detuneN_ini + ", converted detune: " + str(converted_detune))
         DS.dexed_state_dict['dexedState']['@masterTune'] = str(converted_detune)
 
         # Edit the loaded bank of voices in dexed_state_dict
@@ -138,7 +129,6 @@ def main():
             sysex = file.read()
             with open(os.path.basename(sysex_file_name), 'wb') as f:
                 f.write(sysex)
-        # print("Loading sysex file: " + sysex_file_name)
         with open(os.path.basename(sysex_file_name), 'rb') as file:
             sysex = file.read()
         # Delete the sysex file
@@ -154,7 +144,6 @@ def main():
 
         # Get the name of the voice from the VCED
         name = dx7.get_voice_name(vced)
-        print("Voice name from VCED: " + name)
 
         # Construct the dexed_state_dict['dexedState']['@wheelMod'] value given the above format, based on the content of tx816 function_data
         # For example, if the voice name is "AC.PNO 1.1", then dexed_state_dict['dexedState']['@wheelMod'] should be
@@ -165,18 +154,13 @@ def main():
         assert voice["Voice"] == name
         # Construct the dexed_state_dict['dexedState']['@wheelMod'] value given the above format, based on the content of tx816 function_data
         converted_wheelMod = voice["R MOD"] + " " + voice["P MOD"] + " " + voice["A MOD"] + " " + voice["E MOD"]
-        # print("Converted wheelMod: " + converted_wheelMod)
         DS.dexed_state_dict['dexedState']['@wheelMod'] = converted_wheelMod
         converted_aftertouchMod = voice["R A.TCH"] + " " + voice["P A.TCH"] + " " + voice["A A.TCH"] + " " + voice["E A.TCH"]
-        # print("Converted aftertouchMod: " + converted_aftertouchMod)
         DS.dexed_state_dict['dexedState']['@aftertouchMod'] = converted_aftertouchMod
         converted_footMod = voice["R F.C"] + " " + voice["P F.C"] + " " + voice["A F.C"] + " " + voice["E F.C"]
-        # print("Converted footMod: " + converted_footMod)
         DS.dexed_state_dict['dexedState']['@footMod'] = converted_footMod
         converted_breathMod = voice["R B.C"] + " " + voice["P B.C"] + " " + voice["A B.C"] + " " + voice["E B.C"]
-        # print("Converted breathMod: " + converted_breathMod)
         DS.dexed_state_dict['dexedState']['@breathMod'] = converted_breathMod
-        print("")
 
         plugin_instance.update_blob(1, (DS.get_data_blob()))
 
@@ -193,17 +177,14 @@ def main():
         # Find the numbers of all lines that contain "<JS midi/midi_note_filter" after whitespace, and add 1 to each of them
         # (these are the lines that contain the MIDI note filter values for the Dexed instances)
         midi_note_filter_line_number = [i+1 for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<JS midi/midi_note_filter')][dexed_instance_number]
-        # print(rpp.lines[midi_note_filter_line_number])
         # Get the number of leading spaces in the line
         indent = len(rpp.lines[midi_note_filter_line_number]) - len(rpp.lines[midi_note_filter_line_number].lstrip())
         # This line contains multiple fields, each separated by a space
         fields = rpp.lines[midi_note_filter_line_number].strip().split(' ')
         fields[1] = high_note
         fields[2] = low_note
-        # print("Low note: " + low_note + ", high note: " + high_note)
         # Replace the line with the modified line
         rpp.lines[midi_note_filter_line_number] = ' ' * indent + ' '.join(fields)
-        # print(rpp.lines[midi_note_filter_line_number])
 
         """
                 <JS utility/volume_pan ""
@@ -214,7 +195,6 @@ def main():
         # Find the numbers of all lines that contain "<JS utility/volume_pan" after whitespace, and add 1 to each of them
         # (these are the lines that contain the volume and pan values for the Dexed instances)
         volume_pan_line_number = [i+1 for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<JS utility/volume_pan')][dexed_instance_number]
-        # print(rpp.lines[volume_pan_line_number])
         # Get the number of leading spaces in the line
         indent = len(rpp.lines[volume_pan_line_number]) - len(rpp.lines[volume_pan_line_number].lstrip())
         # This line contains multiple fields, each separated by a space
@@ -243,7 +223,6 @@ def main():
         fields[1] = str(pan) # -100 .. 100
         # Replace the line with the modified line
         rpp.lines[volume_pan_line_number] = ' ' * indent + ' '.join(fields)
-        # print(rpp.lines[volume_pan_line_number])
 
         """
         <CONTAINER Container "<...>"
@@ -252,7 +231,6 @@ def main():
         # Find the numbers of all lines that contain "<CONTAINER Container" after whitespace
         # (these are the lines that contain the track names for the Dexed instances)
         container_line_number = [i for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<CONTAINER Container ')][dexed_instance_number]
-        # print(rpp.lines[container_line_number])
         # Get the number of leading spaces in the line
         indent = len(rpp.lines[container_line_number]) - len(rpp.lines[container_line_number].lstrip())
         # This line contains multiple fields, each separated by '"' characters
@@ -261,7 +239,6 @@ def main():
         fields[1] = "TG" + str(tg_number+1) + ": " + voice["Description"]
         # Replace the line with the modified line
         rpp.lines[container_line_number] = ' ' * indent + '"'.join(fields)
-        # print(rpp.lines[container_line_number])
 
         dexed_instance_number += 1
 
@@ -320,7 +297,6 @@ def main():
         # Find the numbers of all lines that contain "<CONTAINER Container" after whitespace
         # (these are the lines that contain the track names for the Dexed instances)
         container_line_number = [i for i, line in enumerate(rpp.lines) if line.lstrip().startswith('<CONTAINER Container ')][dexed_instance_number]
-        # print(rpp.lines[container_line_number])
         # Get the number of leading spaces in the line
         indent = len(rpp.lines[container_line_number]) - len(rpp.lines[container_line_number].lstrip())
         # This line contains multiple fields, each separated by '"' characters
@@ -329,7 +305,6 @@ def main():
         fields[1] = fields[1].replace("Foot Controller", "(FC Off)").replace("Breath Controller", "(BC Off)")
         # Replace the line with the modified line
         rpp.lines[container_line_number] = ' ' * indent + '"'.join(fields)
-        # print(rpp.lines[container_line_number])
 
         plugin_instance.update_blob(1, (DS.get_data_blob()))
 
@@ -413,13 +388,42 @@ def main():
             f.write(f"; MiniDexed Performance: {track_name}\n")
             # Write all TG parameters, inserting a comment above VoiceData with the VCED name
             for tg in range(8):
-                # Try to get the VCED name for this TG
-                vced_name = performances_params[perf_index][tg].get(f'VCEDName{tg+1}', None)
+                # Get the VCED name for this TG from VoiceData
+                vced_name = None
+                vced_desc = None
+                vdata = performances_params[perf_index][tg].get(f'VoiceData{tg+1}', None)
+                if vdata:
+                    hexbytes = vdata.split()
+                    if len(hexbytes) >= 155:
+                        try:
+                            vced = [int(b, 16) for b in hexbytes[:155]]
+                            vced_name = dx7.get_voice_name(vced).strip()
+                            match = next((v for v in tx816.function_data if v["Voice"].strip() == vced_name), None)
+                            if match:
+                                vced_desc = match.get("Description", None)
+                        except Exception:
+                            vced_name = None
                 for key, value in performances_params[perf_index][tg].items():
                     if key.startswith('VoiceData'):
-                        # Write VCED name comment if available
+                        # Extrahiere VCED-Name und Beschreibung für jede VoiceData-Zeile
+                        vced_name = None
+                        vced_desc = None
+                        hexbytes = value.split()
+                        if len(hexbytes) >= 155:
+                            try:
+                                vced = [int(b, 16) for b in hexbytes[:155]]
+                                vced_name = dx7.get_voice_name(vced).strip()
+                                match = next((v for v in tx816.function_data if v["Voice"].strip() == vced_name), None)
+                                if match:
+                                    vced_desc = match.get("Description", None)
+                            except Exception:
+                                vced_name = None
+                        comment = "; Voice: "
                         if vced_name:
-                            f.write(f"; VCED Name: {vced_name}\n")
+                            comment += vced_name
+                        if vced_desc:
+                            comment += f" — {vced_desc}"
+                        f.write(comment + "\n")
                     f.write(f"{key}={value}\n")
             # Write global effects section (MiniDexed defaults)
             f.write("CompressorEnable=1\n")
@@ -432,7 +436,6 @@ def main():
             f.write("ReverbLevel=99\n")
 
     print(os.path.abspath('tx816.zip'))
-
     print("Done.")
 
 if __name__ == "__main__":

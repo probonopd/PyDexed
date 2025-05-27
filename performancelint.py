@@ -69,8 +69,22 @@ def lint_performance_ini(filepath):
     ]
     # Check all TGs (TG1-TG8)
     for tg in range(1, 9):
+        has_voicedata = f"VoiceData{tg}" in params and params[f"VoiceData{tg}"]
+        has_bank = f"BankNumber{tg}" in params and params[f"BankNumber{tg}"]
+        has_voice = f"VoiceNumber{tg}" in params and params[f"VoiceNumber{tg}"]
+        if has_voicedata:
+            # VoiceData present: BankNumber/VoiceNumber are ignored
+            if has_bank or has_voice:
+                errors.append(f"Warning: BankNumber{tg} and/or VoiceNumber{tg} are present but will not be used because VoiceData{tg} is present.")
+        elif has_bank and has_voice:
+            # Only BankNumber/VoiceNumber present, that's OK
+            pass
+        else:
+            errors.append(f"Missing VoiceData{tg} or BankNumber{tg} and VoiceNumber{tg}")
         for param, minv, maxv, typ, default in tg_params:
             key = f"{param}{tg}"
+            if param in ("VoiceData", "BankNumber", "VoiceNumber"):
+                continue  # Already checked above
             if key not in params:
                 errors.append(f"Missing {key}")
                 continue
@@ -84,7 +98,6 @@ def lint_performance_ini(filepath):
                     errors.append(f"{key} not an integer: {value}")
             elif typ == 'hex':
                 if value:
-                    # VoiceData must be 156 space-separated hex bytes if present
                     hexbytes = value.split()
                     if len(hexbytes) != 156:
                         errors.append(f"{key} should have 156 bytes, has {len(hexbytes)}")
@@ -145,13 +158,24 @@ def main():
                 params[k.strip()] = v.strip()
         # Print performance name above the table
         print(f"\n### {perf_name}\n")
-        print("| TG | Pan  | MIDI Channel | Voice Name         |")
-        print("|----|------|--------------|---------------------|")
+        print(f"| TG | Pan  | MIDI Channel | Voice Name         | Comments              |")
+        print(f"|----|------|--------------|---------------------|-----------------------|")
         for tg in range(1, 9):
             pan = params.get(f'Pan{tg}', '?')
             midi = params.get(f'MIDIChannel{tg}', '?')
             vname = '?'
             vdata = params.get(f'VoiceData{tg}', None)
+            comment = ''
+            # Suche Kommentar direkt über VoiceData-Zeile
+            for i, line in enumerate(lines_raw):
+                if line.strip().startswith(f'VoiceData{tg}='):
+                    if i > 0 and lines_raw[i-1].strip().startswith(';'):
+                        comment_line = lines_raw[i-1].strip().lstrip(';').strip()
+                        if ' — ' in comment_line:
+                            comment = comment_line.split(' — ', 1)[1].strip()
+                        else:
+                            comment = comment_line
+                    break
             if vdata:
                 hexbytes = vdata.split()
                 if len(hexbytes) >= 155:
@@ -160,7 +184,7 @@ def main():
                         vname = dx7.get_voice_name(vced).strip()
                     except Exception:
                         vname = '?'
-            print(f"| {tg}  | {pan}   | {midi}           | {vname.ljust(19)}|")
+            print(f"| {tg}  | {pan}   | {midi}           | {vname.ljust(19)}| {comment.ljust(21)}|")
         # --- End summary ---
         if errors:
             print(f"{f}:")
