@@ -543,6 +543,16 @@ def main():
                         if match and match.get("Description"):
                             comment += f" — {match['Description']}"
                         f.write(comment + "\n")
+                        # --- FIX: Ensure correct VCED checksum for TX816 VoiceData ---
+                        if value:
+                            hexbytes = value.split()
+                            # Pad or trim to 156 bytes
+                            vced_bytes = [int(b, 16) for b in hexbytes[:156]]
+                            if len(vced_bytes) < 156:
+                                vced_bytes += [0x00] * (156 - len(vced_bytes))
+                            # Set checksum in last byte
+                            vced_bytes[155] = sum(vced_bytes[:155]) & 0x7F
+                            value = ' '.join(f"{b:02X}" for b in vced_bytes)
                     if key.startswith('ReverbSend') and value != '0':
                         f.write("; NOTE: Reverb added; not part of the original performance\n")
                         f.write(f"{key}={value}\n")
@@ -661,7 +671,19 @@ def main():
                             print(f"Error: B bank index out of range: INT={INT}, voice_num={voice_num}, b_index={b_index}, perf_index={perf_index}, tg={tg}")
                             b_index = 0  # fallback to first voice in B bank
                         vced = dx7.get_vced_from_bank_sysex(sysexB, b_index)
-                    voicedata = ' '.join(f"{b:02X}" for b in vced) + " 00"  # 156 bytes
+                    # Ensure VCED is 155 bytes, then set byte 155 to checksum (sum of bytes 0-154) & 0x7F
+                    if len(vced) >= 155:
+                        vced_bytes = vced[:155]
+                        checksum = sum(vced_bytes) & 0x7F
+                        vced_bytes.append(checksum)
+                    else:
+                        # fallback: pad to 155 then add checksum
+                        vced_bytes = vced + [0x00]*(155-len(vced))
+                        checksum = sum(vced_bytes) & 0x7F
+                        vced_bytes.append(checksum)
+                    # Ensure VCED is 156 bytes (including checksum)
+                    assert len(vced_bytes) == 156
+                    voicedata = ' '.join(f"{b:02X}" for b in vced_bytes)
                     vced_name = dx7.get_voice_name(vced).strip()
                     comment = f"; INT {INT} — {vced_name}"
                 elif perf_index < 64:
@@ -678,7 +700,19 @@ def main():
                             print(f"Error: B bank index out of range: INT={INT}, voice_num={voice_num}, b_index={b_index}, perf_index={perf_index}, tg={tg}")
                             b_index = 0  # fallback to first voice in B bank
                         vced = dx7.get_vced_from_bank_sysex(sysexB, b_index)
-                    voicedata = ' '.join(f"{b:02X}" for b in vced) + " 00"  # 156 bytes
+                    # Ensure VCED is 155 bytes, then set byte 155 to checksum (sum of bytes 0-154) & 0x7F
+                    if len(vced) >= 155:
+                        vced_bytes = vced[:155]
+                        checksum = sum(vced_bytes) & 0x7F
+                        vced_bytes.append(checksum)
+                    else:
+                        # fallback: pad to 155 then add checksum
+                        vced_bytes = vced + [0x00]*(155-len(vced))
+                        checksum = sum(vced_bytes) & 0x7F
+                        vced_bytes.append(checksum)
+                    # Ensure VCED is 156 bytes (including checksum)
+                    assert len(vced_bytes) == 156
+                    voicedata = ' '.join(f"{b:02X}" for b in vced_bytes)
                     vced_name = dx7.get_voice_name(vced).strip()
                     comment = f"; INT {INT} — {vced_name}"
                 else:
@@ -695,7 +729,19 @@ def main():
                             print(f"Error: B bank index out of range: voice_num={voice_num}, b_index={b_index}, perf_index={perf_index}, tg={tg}")
                             b_index = 0  # fallback to first voice in B bank
                         vced = dx7.get_vced_from_bank_sysex(sysexB, b_index)
-                    voicedata = ' '.join(f"{b:02X}" for b in vced) + " 00"
+                    # Ensure VCED is 155 bytes, then set byte 155 to checksum (sum of bytes 0-154) & 0x7F
+                    if len(vced) >= 155:
+                        vced_bytes = vced[:155]
+                        checksum = sum(vced_bytes) & 0x7F
+                        vced_bytes.append(checksum)
+                    else:
+                        # fallback: pad to 155 then add checksum
+                        vced_bytes = vced + [0x00]*(155-len(vced))
+                        checksum = sum(vced_bytes) & 0x7F
+                        vced_bytes.append(checksum)
+                    # Ensure VCED is 156 bytes (including checksum)
+                    assert len(vced_bytes) == 156
+                    voicedata = ' '.join(f"{b:02X}" for b in vced_bytes)
                     vced_name = dx7.get_voice_name(vced).strip()
                     comment = f"; INT {voice_num+1} — {vced_name}"
                     if fallback:

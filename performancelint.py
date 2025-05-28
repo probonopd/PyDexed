@@ -20,6 +20,19 @@ import sys
 import re
 import dx7
 
+def compute_vced_checksum(hex_string):
+    """
+    Compute the checksum for DX7 VCED data.
+    """
+    byte_list = [int(byte, 16) for byte in hex_string.split()]
+    if len(byte_list) != 156:
+        raise ValueError("Expected 156 bytes (VCED format)")
+
+    expected_checksum = byte_list[155]
+    calculated_checksum = sum(byte_list[:155]) & 0x7F
+
+    return calculated_checksum, expected_checksum
+
 def lint_performance_ini(filepath):
     """
     Lint a MiniDexed performance INI file for spec compliance.
@@ -86,6 +99,14 @@ def lint_performance_ini(filepath):
             # VoiceData present: BankNumber/VoiceNumber are ignored
             if has_bank or has_voice:
                 errors.append(f"Warning: BankNumber{tg} and/or VoiceNumber{tg} are present but will not be used because VoiceData{tg} is present.")
+            # Validate VoiceData checksum
+            try:
+                vdata = params[f"VoiceData{tg}"]
+                calc, expected = compute_vced_checksum(vdata)
+                if calc != expected:
+                    errors.append(f"VoiceData{tg} checksum mismatch: calculated {calc:02X}, expected {expected:02X}")
+            except Exception as e:
+                errors.append(f"VoiceData{tg} checksum error: {e}")
         elif has_bank and has_voice:
             pass
         else:
@@ -237,4 +258,14 @@ def main():
         print("All files OK.")
 
 if __name__ == "__main__":
+    # Paste your hex string here
+    hex_data = """54 24 0A 10 63 63 5F 00 34 00 00 03 00 00 03 00 38 00 03 00 00\n54 24 0A 0C 63 63 5F 00 34 12 00 03 00 00 00 01 49 00 01 00 01\n54 24 0A 00 63 63 63 00 26 06 00 00 00 00 00 01 50 01 00 27 04\n26 07 07 29 5D 5C 5C 00 24 1F 00 00 00 00 00 01 63 00 01 00 0D\n2C 24 0A 16 63 63 63 00 22 00 00 00 00 00 00 01 4C 00 01 00 07\n2D 23 0A 30 63 63 63 00 24 1F 00 00 00 00 03 01 61 01 00 1A 07\n54 5F 5F 3C 32 32 32 32 0E 07 00 1E 0F 12 00 00 04 01 18 57 61\n72 6D 20 53 74 67 20 41 00"""  # Ends in 00 (expected to be incorrect)
+
+    hex_data = hex_data.replace("\n", " ")
+
+    calc, expected = compute_vced_checksum(hex_data)
+    print(f"Calculated checksum: {calc:02X}")
+    print(f"Expected (in file) : {expected:02X}")
+    print("Match?" , "✔️" if calc == expected else "❌")
+
     main()
