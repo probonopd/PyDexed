@@ -35,6 +35,10 @@ jobs:
       run: |
            git clone https://github.com/Perlence/rpp rppgit
            python create-rpp.py
+    - name: Zip MiniDexed performance files
+      run: |
+           zip -r tx816_minidexed_performances.zip tx816
+           zip -r dx7IId_minidexed_performances.zip dx7IId
     - uses: actions/upload-artifact@v4
       with:
         name: tx816_and_dx7IId
@@ -43,11 +47,13 @@ jobs:
           dx7IId_modified.rpp
           tx816
           dx7IId
+          tx816_minidexed_performances.zip
+          dx7IId_minidexed_performances.zip
 
     - name: Upload to GitHub Releases (only when building from main branch)
       if: ${{ github.ref == 'refs/heads/main' }}
       run: |
            set -ex
            wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-           bash ./upload.sh ./tx816.zip ./dx7IId.zip
+           bash ./upload.sh ./tx816.zip ./dx7IId.zip ./tx816_minidexed_performances.zip ./dx7IId_minidexed_performances.zip
 
